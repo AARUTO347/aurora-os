@@ -118,9 +118,9 @@ disc image (ISO)**, select the ISO, use **BIOS** firmware (not UEFI), 4 GB RAM
 or more, and start it. AURORA boots live; it does not install to the virtual
 disk. The image is BIOS-only, so a UEFI VM will not boot it (KI-015).
 
-A ready-made VMware bundle (`aurora-os.vmx` and the ISO) can be generated on a
-host by copying the two files into one folder; the VMX uses BIOS firmware, an
-IDE CD-ROM, 4 GB RAM, NAT networking, and a read-only shared folder.
+A ready-made VMware bundle lives in [distribution/vmware](distribution/vmware):
+copy `aurora-os.vmx` next to the ISO. The VMX uses BIOS firmware, an IDE
+CD-ROM, 4 GB RAM, NAT networking, and a read-only shared folder.
 
 ## Repository layout
 
