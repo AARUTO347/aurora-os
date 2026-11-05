@@ -1,0 +1,5 @@
+#!/bin/sh
+# live-build 3.0a57 invokes grub-mkimage without a prefix, but GRUB 2.14
+# requires one; without it core.img is never created and the El Torito image
+# is just cdboot.img. This image uses the conventional BIOS prefix.
+exec /usr/bin/grub-mkimage -p /boot/grub "$@"

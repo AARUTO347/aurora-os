@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+# Milestone 1 test-only convenience: autologin on the serial console so the
+# boot test can prove an interactive shell. Never ship this in a release image.
+#
+# Do not rely on the serial-getty@ttyS0 unit generated from console=ttyS0: its
+# dev-ttyS0.device ordering can time out on slow TCG boots before udev coldplug
+# tags the device, which kills the getty. agetty opens /dev/ttyS0 directly, so
+# run it from a unit with no device-unit dependency and mask the generated one.
+ln -sf /dev/null /etc/systemd/system/serial-getty@ttyS0.service
+
+cat > /etc/systemd/system/aurora-serial-getty.service <<'CONF'
+[Unit]
+Description=AURORA serial console (test only)
+After=systemd-user-sessions.service
+Conflicts=rescue.service rescue.target
+
+[Service]
+Type=idle
+ExecStart=-/sbin/agetty --autologin root --noclear ttyS0 115200 linux
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+CONF
+
+install -d /etc/systemd/system/multi-user.target.wants
+ln -sf /etc/systemd/system/aurora-serial-getty.service \
+	/etc/systemd/system/multi-user.target.wants/aurora-serial-getty.service
+
+install -d /etc/profile.d
+cat > /etc/profile.d/aurora-evidence.sh <<'CONF'
+if [ "$(tty 2>/dev/null)" = "/dev/ttyS0" ]; then
+	echo "AURORA_M1_SHELL_OK user=$(id -un) kernel=$(uname -r)"
+fi
+CONF
+chmod 0644 /etc/profile.d/aurora-evidence.sh

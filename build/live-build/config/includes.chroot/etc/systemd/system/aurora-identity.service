@@ -1,0 +1,14 @@
+[Unit]
+Description=AURORA live-session identity (full name and hostname)
+After=accounts-daemon.service systemd-user-sessions.service
+Before=lightdm.service
+ConditionPathExists=/etc/casper.conf
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/aurora-identity
+ExecStartPost=/bin/sh -c 'systemctl try-restart accounts-daemon.service || true'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

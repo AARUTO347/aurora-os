@@ -1,0 +1,14 @@
+#!/bin/sh
+# Rewrite the generated GRUB menu labels from live-build's defaults and put
+# the BIOS modules where GRUB 2.14 looks for them ($prefix/i386-pc). live-build
+# copies them flat into /boot/grub, which sends the image to rescue mode.
+set -e
+
+sed -i 's|Debian GNU/Linux|AURORA OS|g' binary/boot/grub/grub.cfg
+
+mkdir -p binary/boot/grub/i386-pc
+for f in binary/boot/grub/*.mod binary/boot/grub/*.lst binary/boot/grub/*.pf2 binary/boot/grub/*.o
+do
+	[ -e "$f" ] || continue
+	cp -a "$f" binary/boot/grub/i386-pc/
+done

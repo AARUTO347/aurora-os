@@ -1,0 +1,24 @@
+#!/bin/sh
+# Apply the AURORA wallpaper to every monitor RandR exposes at login.
+# The monitor name differs between QEMU (Virtual-1) and physical hardware,
+# so query the properties xfdesktop created instead of hardcoding names.
+WALL=/usr/share/aurora/wallpaper.png
+[ -r "$WALL" ] || exit 0
+
+i=0
+while [ "$i" -lt 10 ]; do
+	props=$(xfconf-query -c xfce4-desktop -l 2>/dev/null |
+		grep -E '/(last-image|image-style)$') || true
+	[ -n "$props" ] && break
+	i=$((i + 1))
+	sleep 1
+done
+
+printf '%s\n' "$props" | while IFS= read -r prop; do
+	case "$prop" in
+		*/last-image) xfconf-query -c xfce4-desktop -p "$prop" -s "$WALL" ;;
+		*/image-style) xfconf-query -c xfce4-desktop -p "$prop" -s 5 ;;
+	esac
+done
+
+logger -t aurora "AURORA_GUI_SESSION_OK user=${USER:-unknown} session=${XDG_SESSION_DESKTOP:-unknown}"

@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+# Boot to the graphical login and start LightDM. Autologin is disabled by
+# /etc/lightdm/lightdm.conf.d/90-aurora.conf, which is read after the keys
+# casper injects into lightdm.conf at boot.
+systemctl set-default graphical.target
+systemctl enable lightdm.service
+systemctl enable aurora-live-password.service
+systemctl enable aurora-identity.service
+systemctl enable aurora-vt.service
+
+# Fail the build early if the staged login/session configuration is incomplete.
+for f in \
+	/etc/lightdm/lightdm.conf.d/50-aurora.conf \
+	/etc/lightdm/lightdm.conf.d/90-aurora.conf \
+	/etc/lightdm/lightdm-gtk-greeter.conf.d/50-aurora.conf \
+	/usr/share/aurora/wallpaper.png \
+	/usr/share/aurora/login-logo.svg \
+	/usr/share/aurora/credits.txt \
+	/usr/local/bin/aurora-display-setup \
+	/usr/local/bin/aurora-session-setup \
+	/usr/local/bin/aurora-live-password \
+	/usr/local/bin/aurora-identity \
+	/usr/local/bin/aurora-vt \
+	/usr/local/bin/aurora-wallpaper \
+	/etc/systemd/system/aurora-live-password.service \
+	/etc/systemd/system/aurora-identity.service \
+	/etc/systemd/system/aurora-vt.service \
+	/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml \
+	/etc/xdg/autostart/aurora-wallpaper.desktop \
+	/etc/xdg/autostart/aurora-session.desktop \
+	/etc/skel/Desktop/aurora-logout.desktop \
+	/etc/skel/Desktop/aurora-switch-user.desktop \
+	/etc/skel/Desktop/aurora-lock.desktop; do
+	if [ ! -e "$f" ]; then
+		echo "0400-gui.chroot: missing $f" >&2
+		exit 1
+	fi
+done
+
+chmod 0755 /usr/local/bin/aurora-display-setup \
+	/usr/local/bin/aurora-session-setup \
+	/usr/local/bin/aurora-live-password \
+	/usr/local/bin/aurora-identity \
+	/usr/local/bin/aurora-vt \
+	/usr/local/bin/aurora-wallpaper
+chmod 0755 /etc/skel/Desktop/*.desktop
+chmod 0644 /etc/xdg/autostart/aurora-session.desktop \
+	/etc/systemd/system/aurora-live-password.service \
+	/etc/systemd/system/aurora-identity.service \
+	/etc/systemd/system/aurora-vt.service \
+	/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml
+
+# The greeter is only usable if it can read the account list.
+systemctl enable accounts-daemon.service

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Session Setup
+Comment=Disable display blanking for the live session
+Exec=/usr/local/bin/aurora-session-setup
+OnlyShowIn=XFCE;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

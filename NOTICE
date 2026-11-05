@@ -1,0 +1,17 @@
+AURORA OS
+Copyright (c) 2026 AARUTO (Abhishek Solanki), DP-_-, DEV
+
+MADE BY AARUTO
+
+Credits
+  AARUTO (Abhishek Solanki)
+  DP-_-
+  DEV
+
+AURORA OS is a live desktop image assembled from Ubuntu 26.04 LTS and the
+open-source packages recorded in build/live-build/config/package-lists.
+Those packages remain under their own licenses; their copyright files are
+installed in /usr/share/doc/<package>/copyright inside the image.
+
+The AURORA name, logo, wallpaper, login artwork, documentation, build system,
+and distribution configuration are the work credited above.

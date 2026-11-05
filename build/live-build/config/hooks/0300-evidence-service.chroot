@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+cat > /etc/systemd/system/aurora-evidence.service <<'CONF'
+[Unit]
+Description=AURORA OS boot evidence
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo AURORA_M1_ROOTFS_OK > /dev/console; uname -a > /dev/console'
+
+[Install]
+WantedBy=multi-user.target
+CONF
+
+install -d /etc/systemd/system/multi-user.target.wants
+ln -sf /etc/systemd/system/aurora-evidence.service \
+	/etc/systemd/system/multi-user.target.wants/aurora-evidence.service

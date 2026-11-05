@@ -1,0 +1,31 @@
+#!/bin/sh
+# Runs as the live user from /etc/xdg/autostart. Keeps the XFCE desktop from
+# blanking the display during a live session (KI-024). xfce4-power-manager may
+# start after this entry, so apply the settings again until the channel exists
+# and once more after it has settled.
+set -u
+
+xset s off -dpms -s noblank 2>/dev/null || true
+
+i=0
+while [ "$i" -lt 20 ]; do
+	if xfconf-query -c xfce4-power-manager -l >/dev/null 2>&1; then
+		xfconf-query -c xfce4-power-manager \
+			-p /xfce4-power-manager/dpms-enabled -s false 2>/dev/null || true
+		xfconf-query -c xfce4-power-manager \
+			-p /xfce4-power-manager/blank-on-ac -s 0 2>/dev/null || true
+		xfconf-query -c xfce4-power-manager \
+			-p /xfce4-power-manager/dpms-on-ac-sleep -s 0 2>/dev/null || true
+		xfconf-query -c xfce4-power-manager \
+			-p /xfce4-power-manager/dpms-on-ac-off -s 0 2>/dev/null || true
+		break
+	fi
+	i=$((i + 1))
+	sleep 1
+done
+
+sleep 5
+xset s off -dpms -s noblank 2>/dev/null || true
+
+dpms=$(xset q 2>/dev/null | sed -n 's/.*DPMS is \(Enabled\|Disabled\).*/\1/p')
+logger -t aurora "AURORA_DPMS_DISABLED user=${USER:-unknown} dpms=${dpms:-unknown}"

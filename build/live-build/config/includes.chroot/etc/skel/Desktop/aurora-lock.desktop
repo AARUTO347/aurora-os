@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Lock Screen
+Comment=Lock the current AURORA session
+Exec=xflock4
+Icon=system-lock-screen
+Terminal=false
+Categories=System;Security;
+Keywords=lock;screen;aurora;
+StartupNotify=false

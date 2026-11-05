@@ -1,0 +1,13 @@
+AURORA OS — MADE BY AARUTO
+
+Credits
+  AARUTO (Abhishek Solanki)
+  DP-_-
+  DEV
+
+AURORA OS is built and maintained by AARUTO.
+Base system: Ubuntu 26.04 LTS (resolute) and its open-source packages.
+The AURORA branding, configuration, documentation, and build system are
+the work credited above.
+
+Project: https://github.com/AARUTO347/aurora-os

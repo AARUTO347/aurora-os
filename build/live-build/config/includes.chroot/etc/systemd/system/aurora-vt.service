@@ -1,0 +1,12 @@
+[Unit]
+Description=AURORA graphical VT activation fallback
+After=lightdm.service
+Wants=lightdm.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/aurora-vt
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target

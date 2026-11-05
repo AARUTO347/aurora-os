@@ -1,0 +1,27 @@
+# live-build intermediates (the work directory normally lives outside the repo)
+/binary/
+/chroot/
+/cache/
+/.build/
+
+# Generated images and build output
+artifacts/*.iso
+artifacts/*.img
+artifacts/*.qcow2
+artifacts/logs/
+tests/evidence/
+
+# QEMU runtime files
+*.pid
+*.sock
+*.ppm
+*.qcow2
+
+# Python
+__pycache__/
+*.pyc
+
+# Secrets and local configuration
+.env
+*.key
+*.pem

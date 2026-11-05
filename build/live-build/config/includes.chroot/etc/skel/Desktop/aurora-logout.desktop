@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Log Out
+Comment=End the current AURORA session
+Exec=xfce4-session-logout --logout
+Icon=system-log-out
+Terminal=false
+Categories=System;Session;
+Keywords=logout;sign out;quit;aurora;
+StartupNotify=false

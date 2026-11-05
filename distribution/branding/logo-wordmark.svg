@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 400" width="1500" height="400" role="img" aria-label="AURORA OS - Made by AARUTO">
+  <defs>
+    <radialGradient id="tile" cx="50%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#172238"/>
+      <stop offset="1" stop-color="#080B14"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#45E6FF"/>
+      <stop offset="0.5" stop-color="#648BFF"/>
+      <stop offset="1" stop-color="#A879FF"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#F3F6FF"/>
+      <stop offset="1" stop-color="#BFE9FF"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+
+  <rect width="1500" height="400" fill="none"/>
+  <g transform="translate(40,40) scale(0.3125)">
+    <rect width="1024" height="1024" rx="232" fill="url(#tile)"/>
+    <rect x="3" y="3" width="1018" height="1018" rx="229" fill="none" stroke="#172238" stroke-width="7"/>
+    <g filter="url(#glow)" opacity="0.7">
+      <path d="M92 792 C 268 616 372 470 574 410 C 736 362 846 328 952 206" fill="none" stroke="url(#ribbon)" stroke-width="70" stroke-linecap="round"/>
+    </g>
+    <path d="M92 792 C 268 616 372 470 574 410 C 736 362 846 328 952 206" fill="none" stroke="url(#ribbon)" stroke-width="44" stroke-linecap="round"/>
+    <path d="M76 646 C 262 540 408 470 596 470 C 758 470 866 392 966 306" fill="none" stroke="#A879FF" stroke-width="20" stroke-linecap="round" opacity="0.85"/>
+    <path d="M342 716 L512 334 L682 716" fill="none" stroke="url(#mark)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M420 594 H 604" fill="none" stroke="url(#ribbon)" stroke-width="34" stroke-linecap="round"/>
+  </g>
+
+  <g font-family="'Segoe UI', 'DejaVu Sans', Arial, sans-serif">
+    <text x="410" y="205" fill="#F3F6FF" font-size="150" font-weight="700" letter-spacing="10">AURORA<tspan fill="#45E6FF"> OS</tspan></text>
+    <text x="418" y="272" fill="#9BA9C7" font-size="34" letter-spacing="12" font-weight="600">MADE BY AARUTO</text>
+    <text x="418" y="330" fill="#648BFF" font-size="25" letter-spacing="1.5">AARUTO (Abhishek Solanki)  ·  DP-_-, DEV</text>
+    <text x="418" y="372" fill="#45E6FF" font-size="20" letter-spacing="4" opacity="0.65">AURORA OS</text>
+  </g>
+</svg>

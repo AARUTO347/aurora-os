@@ -1,0 +1,30 @@
+# AURORA OS package list
+# Milestone 1 baseline (kernel, casper live system)
+linux-image-7.0.0-42-generic
+linux-modules-7.0.0-42-generic
+initramfs-tools
+casper
+systemd-sysv
+
+# Milestone 2: graphical desktop (XFCE on Xorg) with LightDM
+xserver-xorg-core
+xserver-xorg-input-libinput
+xserver-xorg-video-vesa
+xserver-xorg-video-fbdev
+xinit
+x11-xserver-utils
+dbus-x11
+lightdm
+lightdm-gtk-greeter
+accountsservice
+librsvg2-common
+xfce4
+xfce4-terminal
+light-locker
+
+# Milestone 2: dark aurora look
+arc-theme
+elementary-xfce-icon-theme
+adwaita-icon-theme
+xcursor-themes
+fonts-dejavu-core

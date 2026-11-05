@@ -1,0 +1,57 @@
+name: Bug report
+description: Something is broken in AURORA OS
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing AURORA OS. Attach the ISO checksum, the VM type,
+        and a screenshot or serial log where possible.
+  - type: input
+    id: version
+    attributes:
+      label: AURORA version
+      description: Output of `cat /etc/aurora-release` or the ISO filename.
+      placeholder: 0.3.0-dev
+    validations:
+      required: true
+  - type: input
+    id: checksum
+    attributes:
+      label: ISO SHA256
+      description: From `sha256sum aurora-os-*.iso` or the `.sha256` file.
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where did it happen?
+      options:
+        - QEMU (TCG)
+        - QEMU (KVM)
+        - VMware Workstation/Player
+        - VirtualBox
+        - Physical machine
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Boot the ISO
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include serial log lines, `journalctl -b` excerpts, or screenshots.
+    validations:
+      required: true

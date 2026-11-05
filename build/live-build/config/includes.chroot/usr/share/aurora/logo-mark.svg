@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="AURORA OS emblem">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="32%" r="78%">
+      <stop offset="0" stop-color="#172238"/>
+      <stop offset="0.62" stop-color="#0B1120"/>
+      <stop offset="1" stop-color="#080B14"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#45E6FF"/>
+      <stop offset="0.48" stop-color="#648BFF"/>
+      <stop offset="1" stop-color="#A879FF"/>
+    </linearGradient>
+    <linearGradient id="ribbon2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#A879FF"/>
+      <stop offset="0.5" stop-color="#648BFF"/>
+      <stop offset="1" stop-color="#45E6FF"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#F3F6FF"/>
+      <stop offset="1" stop-color="#BFE9FF"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+    <filter id="soft2" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="232" fill="url(#bg)"/>
+  <rect x="3" y="3" width="1018" height="1018" rx="229" fill="none" stroke="#172238" stroke-width="6"/>
+
+  <g filter="url(#soft)" opacity="0.75">
+    <path d="M92 792 C 268 616 372 470 574 410 C 736 362 846 328 952 206" fill="none" stroke="url(#ribbon)" stroke-width="104" stroke-linecap="round"/>
+    <path d="M76 646 C 262 540 408 470 596 470 C 758 470 866 392 966 306" fill="none" stroke="url(#ribbon2)" stroke-width="58" stroke-linecap="round"/>
+  </g>
+
+  <path d="M92 792 C 268 616 372 470 574 410 C 736 362 846 328 952 206" fill="none" stroke="url(#ribbon)" stroke-width="46" stroke-linecap="round" opacity="0.95"/>
+  <path d="M76 646 C 262 540 408 470 596 470 C 758 470 866 392 966 306" fill="none" stroke="url(#ribbon2)" stroke-width="24" stroke-linecap="round" opacity="0.9"/>
+  <path d="M126 744 C 300 574 470 478 660 446 C 800 422 884 366 944 286" fill="none" stroke="#F3F6FF" stroke-width="5" stroke-linecap="round" opacity="0.55" filter="url(#soft2)"/>
+
+  <g opacity="0.9" fill="#F3F6FF">
+    <circle cx="214" cy="286" r="4"/>
+    <circle cx="306" cy="212" r="2.6"/>
+    <circle cx="842" cy="566" r="3.4"/>
+    <circle cx="916" cy="446" r="2.4"/>
+    <circle cx="742" cy="208" r="2.2"/>
+    <circle cx="158" cy="532" r="2.6"/>
+  </g>
+
+  <g filter="url(#soft2)" opacity="0.55">
+    <path d="M338 726 L512 326 L686 726" fill="none" stroke="#45E6FF" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M342 716 L512 334 L682 716" fill="none" stroke="url(#mark)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M420 594 H 604" fill="none" stroke="url(#ribbon)" stroke-width="34" stroke-linecap="round"/>
+</svg>

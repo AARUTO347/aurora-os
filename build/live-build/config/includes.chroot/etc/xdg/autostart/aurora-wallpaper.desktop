@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA wallpaper
+Comment=Apply the AURORA OS desktop wallpaper
+Exec=/usr/local/bin/aurora-wallpaper
+Terminal=false
+NoDisplay=true
+OnlyShowIn=XFCE;

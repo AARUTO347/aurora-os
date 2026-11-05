@@ -1,0 +1,22 @@
+#!/bin/sh
+# LightDM display-setup-script: make sure the X server's VT is foreground.
+# Some live boots leave the X VT inactive, which keeps the greeter hidden
+# behind tty1 (KI-027). Runs as root with DISPLAY already set.
+set -u
+
+xset s off -dpms -s noblank 2>/dev/null || true
+
+vt=$(ps -eo args= 2>/dev/null |
+	sed -n 's/^Xorg .*[[:space:]]vt\([0-9][0-9]*\).*/\1/p' | head -n1)
+[ -n "${vt:-}" ] || vt=7
+
+i=0
+while [ "$i" -lt 10 ]; do
+	if [ "$(fgconsole 2>/dev/null || echo -1)" = "$vt" ]; then
+		exit 0
+	fi
+	chvt "$vt" 2>/dev/null || true
+	i=$((i + 1))
+	sleep 0.5
+done
+exit 0

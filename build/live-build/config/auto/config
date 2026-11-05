@@ -1,0 +1,31 @@
+#!/bin/sh
+# AURORA OS live-build configuration (Milestone 2, graphical live image).
+# Executed by `lb config` inside the build work directory created by
+# build/build-iso.sh. Do not run this by hand outside that directory.
+set -e
+
+lb config noauto \
+	--mode ubuntu \
+	--distribution resolute \
+	--architecture amd64 \
+	--binary-images iso \
+	--bootloader grub2 \
+	--grub-splash none \
+	--initramfs casper \
+	--initsystem systemd \
+	--linux-packages linux-image \
+	--linux-flavours 7.0.0-42-generic \
+	--archive-areas "main universe" \
+	--apt-recommends false \
+	--apt-indices false \
+	--debian-installer false \
+	--memtest none \
+	--firmware-binary false \
+	--firmware-chroot false \
+	--compression xz \
+	--iso-application "AURORA OS" \
+	--iso-preparer "AURORA OS build" \
+	--iso-publisher "AURORA OS" \
+	--iso-volume "AURORA_OS_${AURORA_VERSION:-dev}" \
+	--bootappend-live "boot=casper console=tty0 console=ttyS0,115200n8 systemd.show_status=1" \
+	"${@}"

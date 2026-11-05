@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Switch User
+Comment=Return to the AURORA login screen
+Exec=xfce4-session-logout --switch-user
+Icon=system-users
+Terminal=false
+Categories=System;Session;
+Keywords=switch user;login;greeter;aurora;
+StartupNotify=false

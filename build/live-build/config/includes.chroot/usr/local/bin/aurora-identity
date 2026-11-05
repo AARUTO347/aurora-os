@@ -1,0 +1,32 @@
+#!/bin/sh
+# The initramfs must stay identical to a known-good casper image, so the
+# AURORA identity is applied here instead of patching /etc/casper.conf inside
+# the initrd. Runs before LightDM starts.
+set -eu
+
+USER_NAME=${AURORA_LIVE_USER:-ubuntu}
+USER_FULLNAME=${AURORA_LIVE_FULLNAME:-AARUTO}
+USER_HOST=${AURORA_LIVE_HOST:-aurora}
+
+id "$USER_NAME" >/dev/null 2>&1 || exit 0
+
+usermod -c "$USER_FULLNAME" "$USER_NAME"
+
+printf '%s\n' "$USER_HOST" > /etc/hostname
+hostname "$USER_HOST" 2>/dev/null || true
+
+# casper-bottom/15autologin injects [SeatDefaults] autologin-user at boot; the
+# greeter must be the first thing a user sees. Drop-in 90-aurora.conf overrides
+# it too, so both defences have to fail before autologin comes back.
+if [ -f /etc/lightdm/lightdm.conf ]; then
+	sed -i -e '/^\[SeatDefaults\]$/d' \
+		-e '/^autologin-user=/d' \
+		-e '/^autologin-user-timeout=/d' /etc/lightdm/lightdm.conf
+fi
+
+autologin=no
+if grep -q '^autologin-user=.' /etc/lightdm/lightdm.conf 2>/dev/null; then
+	autologin=yes
+fi
+
+logger -t aurora "AURORA_IDENTITY_READY user=$USER_NAME fullname=$USER_FULLNAME host=$USER_HOST autologin=$autologin"

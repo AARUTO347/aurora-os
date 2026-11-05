@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.iso binary
+*.img binary
+*.qcow2 binary
+
+*.svg text
+*.md text

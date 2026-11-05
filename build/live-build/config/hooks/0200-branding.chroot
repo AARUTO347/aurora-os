@@ -1,0 +1,77 @@
+#!/bin/sh
+set -eu
+
+# Keep the release identity in one place so every file agrees.
+AURORA_VERSION="0.3.0-dev"
+AURORA_MILESTONE="Milestone 2"
+
+cat > /etc/aurora-release <<CONF
+AURORA OS ${AURORA_VERSION} (${AURORA_MILESTONE})
+Base: Ubuntu 26.04 LTS (resolute)
+MADE BY AARUTO
+
+Credits:
+  AARUTO (Abhishek Solanki)
+  DP-_-
+  DEV
+CONF
+
+cat > /etc/lsb-release <<CONF
+DISTRIB_ID=AURORA
+DISTRIB_RELEASE=0.3
+DISTRIB_CODENAME=aurora
+DISTRIB_DESCRIPTION="AURORA OS ${AURORA_VERSION} — MADE BY AARUTO"
+CONF
+
+cat > /etc/issue <<CONF
+AURORA OS ${AURORA_VERSION}  \\n \\l
+MADE BY AARUTO
+
+CONF
+
+# /etc/os-release is a symlink to ../usr/lib/os-release on Ubuntu; keep the
+# fields tools rely on (ID_LIKE, UBUNTU_CODENAME) and present AURORA as the
+# distribution identity.
+cat > /usr/lib/os-release <<CONF
+PRETTY_NAME="AURORA OS ${AURORA_VERSION}"
+NAME="AURORA OS"
+VERSION_ID="0.3"
+VERSION="${AURORA_VERSION} (${AURORA_MILESTONE})"
+VERSION_CODENAME=aurora
+ID=aurora
+ID_LIKE="ubuntu debian"
+HOME_URL="https://github.com/AARUTO347/aurora-os"
+DOCUMENTATION_URL="https://github.com/AARUTO347/aurora-os#readme"
+SUPPORT_URL="https://github.com/AARUTO347/aurora-os/issues"
+BUG_REPORT_URL="https://github.com/AARUTO347/aurora-os/issues"
+UBUNTU_CODENAME=resolute
+LOGO=aurora
+CONF
+
+echo aurora > /etc/hostname
+if ! grep -q '^127\.0\.1\.1' /etc/hosts; then
+	echo "127.0.1.1 aurora" >> /etc/hosts
+fi
+
+# casper reads this at boot to create the live user. FLAVOUR must be
+# non-empty or casper replaces USERNAME and HOST with the ISO flavour.
+cat > /etc/casper.conf <<CONF
+export USERNAME="ubuntu"
+export USERFULLNAME="AARUTO"
+export HOST="aurora"
+export BUILD_SYSTEM="AURORA"
+export FLAVOUR="AURORA"
+CONF
+
+install -d /usr/share/aurora
+cat > /usr/share/aurora/credits.txt <<CONF
+AURORA OS — MADE BY AARUTO
+
+Credits
+  AARUTO (Abhishek Solanki)
+  DP-_-
+  DEV
+
+Project: https://github.com/AURUTO347/aurora-os
+CONF
+chmod 0644 /usr/share/aurora/credits.txt
