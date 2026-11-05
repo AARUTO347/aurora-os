@@ -33,6 +33,12 @@ serial-console test hook remains until the release profile is split.
 | 5. Release candidate | NOT STARTED |
 | 6. Optional AI / kernel work | NOT STARTED |
 
+## Download
+
+Prebuilt ISO: [AURORA OS 0.3.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev)
+(693,329,920 bytes, SHA256 `ebc54345bbf131c0d63e8c84e2821ae17347f7b18479f68ea103c9aee135af90`,
+also attached as `.sha256`). BIOS-only live image, tested in QEMU.
+
 ## Screenshots
 
 | Login page | Desktop after login |

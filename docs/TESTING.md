@@ -177,7 +177,7 @@ Screenshots are copied to `docs/screenshots/`; serial logs and PPM originals sta
 | H-08 | Switch User keeps the session and shows the greeter | PASS | `docs/screenshots/switch-user.png` (greeter in unlock mode); h1 serial shows a second `lightdm` `greeter` session (`c2`) on `fgconsole` 8 while the `ubuntu` seat0 session stayed alive |
 | H-09 | The display cannot be blanked by DPMS | PASS | `xset q` in the session: `Server does not have the DPMS Extension` (X started with `-dpms`) |
 | H-10 | X runs on the foreground VT | PASS | `fgconsole` = `7`; `Xorg -nolisten tcp -dpms -s 0 ... vt7 -novtswitch`; `aurora-vt` = `active` |
-| H-11 | Clean shutdown of the test VM | PASS | harness sends `quit` to the QEMU monitor; QEMU exits 0 |
+| H-11 | Test VM stops without a crash | PASS | harness sends `quit` to the QEMU monitor and waits for the process; guest-initiated shutdown/restart is NOT TESTED |
 
 Caveats recorded with the PASS:
 
