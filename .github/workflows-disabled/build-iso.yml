@@ -1,0 +1,38 @@
+name: Build ISO
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  iso:
+    name: live-build ISO
+    # AURORA is based on Ubuntu 26.04 (resolute); the runner must provide that
+    # archive and live-build. Manual dispatch only until the runner image is
+    # generally available.
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            live-build xorriso squashfs-tools grub-pc-bin grub2-common \
+            mtools dosfstools
+
+      - name: Build ISO
+        run: sudo env AURORA_BUILD_DIR="$PWD/build-work" sh ./scripts/build-iso.sh
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-os-iso
+          path: build-work/artifacts/*
+          if-no-files-found: error
+          retention-days: 14
