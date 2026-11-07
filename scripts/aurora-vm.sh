@@ -6,7 +6,7 @@
 set -u
 
 ISO=${AURORA_ISO:-/home/aaruto/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso}
-DISK=${AURORA_STATE:-/mnt/d/AURORA/state.qcow2}
+DISK=${AURORA_STATE:-/home/aaruto/aurora-build/aurora-state.qcow2}
 SNAP=${AURORA_SNAPSHOT:-ready}
 
 if [ ! -f "$ISO" ]; then

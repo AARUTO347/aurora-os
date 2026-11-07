@@ -256,6 +256,20 @@ python3 scripts/qemu-login-test.py \
 
 Run it detached (`setsid nohup ... &`) because a TCG boot takes 10-25 minutes.
 
+### 5.4 Instant start from a saved VM state
+
+`scripts/aurora-vm.sh` keeps a QEMU snapshot on a small qcow2 disk. The first
+run boots once and saves the greeter state (`scripts/aurora-snapshot.py`);
+later runs resume it with `-loadvm ready` in seconds:
+
+```bash
+/home/aaruto/aurora-os/scripts/aurora-vm.sh
+```
+
+On Windows, the desktop shortcut **AURORA OS** runs that script through WSL and
+uses `D:\AURORAurora.ico`. If the snapshot is missing or unusable the
+script deletes it and performs one full boot to recreate it.
+
 Result: serial log reached `graphical.target`; tty1 showed `AURORA OS 0.2.0-dev ubuntu tty1`;
 LightDM started Xorg `:0 ... vt7 -novtswitch` and opened a session for `ubuntu`; `xfce4-session`,
 `xfwm4`, `xfce4-panel` and `xfdesktop` were running. `aurora-v2-desktop.png` and
