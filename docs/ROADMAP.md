@@ -295,21 +295,29 @@ never prevents normal OS use.
 
 ## Immediate next actions
 
-1. Clean rebuild of `0.3.0-dev` end to end with `build/build-iso.sh` (the current image was
-   produced with `lb binary` from the stage-050 pipeline) before any reproducibility claim.
-2. Milestone 2, Step 1: split the test-only hooks (serial autologin, evidence services) from the
-   release profile and keep the boot harness working through the test profile.
-3. Done in 0.3.0-dev: `accountsservice` (panel shows `AARUTO`), DPMS disabled at the X server,
-   branded greeter verified. Next: add `policykit-1` so LightDM can update the AccountsService
-   record without the permission warning, and create `/var/lib/lightdm/data` (KI-026).
-4. Milestone 2, Step 3: Plymouth theme (or a documented GRUB-only fallback) and a fresh GRUB menu
-   capture.
-5. Milestone 2, Step 4: complete `distribution/branding/` (logo SVG, 1920x1080 wallpaper, palette
-   file, licensed font).
-6. Milestone 3: real logout/restart/shutdown, deliberate panel/dock/workspace layout, Thunar
-   operations, settings entry points, session recovery.
-7. Decide whether UEFI support is required before the desktop milestone (currently BIOS-only).
-8. Optional: request authorization for the KVM group change to speed up QEMU tests.
+Priority order after the 0.4.0-dev result (2026-11-06):
+
+1. **Browser rendering (KI-032, blocks I-05).** Falkon opens a window but the web view is not
+   painted under the software-only Xorg, and Epiphany/WebKit aborts. Next: reproduce on a
+   GPU-capable VM (VMware) or real hardware. If it is the emulated adapter, document the browser
+   as requiring a GPU; if it fails everywhere, try `--use-gl=swiftshader`, `--in-process-gpu` and
+   a QtWebEngine software-rasterizer build before considering a different engine.
+2. **KVM for the test host (KI-003).** Adding `aaruto` to the `kvm` group (with explicit
+   authorization, then a WSL restart) removes the snapshot workaround and makes every boot fast.
+3. **Release/test profile split (KI-018).** Remove the test-only serial root autologin and the
+   evidence service from the release image; keep them behind an `AURORA_TEST_HOOKS=1` switch.
+   Also add `policykit-1` (LightDM AccountsService warning) and create `/var/lib/lightdm/data`
+   (KI-026).
+4. **Reproducibility.** The 0.4.0 image was assembled from the chroot (pack + remaster) after
+   live-build's binary stage dropped files. Fix the build pipeline so `scripts/build-iso.sh`
+   alone produces the same tree, then run a clean build and a second boot (G-00 equivalent).
+5. **UEFI and USB (KI-015, KI-016).** Decide whether UEFI boot is required and add an
+   `iso-hybrid` mastering path for USB sticks.
+6. **Milestone 3 desktop work.** Deliberate panel/dock/workspace layout, Thunar operations,
+   settings entry points, session recovery, restart/shutdown from the menu (NOT TESTED).
+7. **Milestone 2 visuals.** Plymouth theme or a documented GRUB-only fallback; fresh GRUB menu
+   capture; finish `distribution/branding/` (1920x1080 wallpaper, palette, licensed font).
+8. **CI.** A workflow-scoped token is needed before `.github/workflows-disabled/` can be enabled.
 
 ## Metrics to record per build
 

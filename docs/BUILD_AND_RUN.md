@@ -266,6 +266,11 @@ later runs resume it with `-loadvm ready` in seconds:
 /home/aaruto/aurora-os/scripts/aurora-vm.sh
 ```
 
+Measured on this host: 22 s from launch to the greeter with a warm page cache,
+40 s cold, against 15-25 minutes for a full TCG boot. The state disk is
+`/home/aaruto/aurora-build/aurora-state.qcow2` (1.2 GiB, saved with
+`savevm ready`).
+
 On Windows, the desktop shortcut **AURORA OS** runs that script through WSL and
 uses `D:\AURORAurora.ico`. If the snapshot is missing or unusable the
 script deletes it and performs one full boot to recreate it.

@@ -29,6 +29,10 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 **0.4.0-dev — login, desktop, browser, logout and switch-user verified** (Milestone 3 in progress)
 
+Next work is tracked in [docs/ROADMAP.md](docs/ROADMAP.md#immediate-next-actions): browser
+rendering under a GPU VM (KI-032), KVM for the test host (KI-003), and the release/test profile
+split (KI-018).
+
 | Milestone | Description | Status |
 |:---------:|-------------|:------:|
 | 0 | Audit | PASS |
