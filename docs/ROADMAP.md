@@ -136,6 +136,24 @@ clean typography). Palette tokens are fixed in `ARCHITECTURE.md` section 4.
 - Open: test/release profile split (KI-018), polkit is missing so LightDM logs an AccountsService
   permission warning (cosmetic), `/var/lib/lightdm/data` is still absent (KI-026).
 
+### Result (0.4.0-dev, 2026-11-06)
+
+- ISO: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 742,064,128 bytes, SHA256
+  `8ec1e5cca2573c85ce7708facdbe44e86ff926541e3d8a0e577126ee88e4cbdf`; initrd kept at
+  `d203e1a3...`.
+- Browser: GNOME Web (Epiphany 49.2) ships in the image with an **AURORA Browser** launcher;
+  `aurora-browser` disables WebKit's sandbox/compositing for the live Xorg session (KI-032).
+- Session actions: Log Out, Switch User and Lock Screen call `aurora-session-action`, which
+  restores the session bus and switches user through LightDM `dm-tool` (fallback
+  `xfce4-session-logout`). Verified: `method=dm-tool`, new greeter session, background session
+  alive.
+- Boot tuning: `networkd-dispatcher`, `casper-md5check`, `e2scrub_reap`, `grub-*`, `ua-*`,
+  `ubuntu-advantage` and the apt-daily timers are masked; systemd job timeouts are 30 s; apt has
+  3 s timeouts and no retries, so an offline boot fails fast instead of waiting minutes.
+- Identity: `0.4.0-dev (Milestone 3)`; credits URL corrected to `AARUTO347`.
+- Open: browser page painting under TCG (window appears, capture lagged), test/release split,
+  polkit warning, `/var/lib/lightdm/data`.
+
 ### Step 1 - Separate test and release profiles
 
 - [ ] Move the test-only hooks (`0100-serial-autologin.chroot`, `0300-evidence-service.chroot`) out

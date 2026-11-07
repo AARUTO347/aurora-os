@@ -189,6 +189,41 @@ Caveats recorded with the PASS:
   pixels instead of fixed sleeps (KI-029).
 - The desktop capture comes from the h1 run; h4 produced the greeter/login/logout/switch frames.
 
+
+---
+
+## Phase I - 0.4.0-dev browser, session actions and boot tuning (2026-11-06)
+
+Image: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 742,064,128 bytes, SHA256
+`8ec1e5cca2573c85ce7708facdbe44e86ff926541e3d8a0e577126ee88e4cbdf`. The squashfs was built
+directly from the verified chroot and remapped into the ISO; the casper initrd is the known-good
+`d203e1a3...` image. QEMU 10.2.1 TCG, 4 vCPU, 3072 MiB, `-vga std`.
+
+Runs: `/home/aaruto/aurora-test/p4` (full flow), `/home/aaruto/aurora-test/p7` (browser check),
+`/home/aaruto/aurora-test/p8` (browser rendering retry).
+
+| ID | Test | Result | Evidence |
+|---|---|---|---|
+| I-01 | Image contains the browser and session-action changes | PASS | squashfs: `usr/bin/epiphany`, `usr/local/bin/aurora-browser`, `aurora-session-action`, `etc/skel/Desktop/aurora-browser.desktop`, `etc/systemd/system.conf.d/aurora-timeouts.conf`, masked `networkd-dispatcher.service`/`casper-md5check.service`; identity `AURORA OS 0.4.0-dev (Milestone 3)` |
+| I-02 | Boot reaches the branded greeter | PASS | serial shell marker, `lightdm active`, greeter `session_present=False`; `01-greeter.png` |
+| I-03 | Password login opens the XFCE session | PASS | `02-login: login attempt 1 detected=True`; session `1000 ubuntu seat0`; `xfce4-panel` running |
+| I-04 | Desktop shows the AURORA Browser launcher | PASS | `docs/screenshots/desktop.png` (Home, File System, Switch User, Log Out, Lock Screen, Browser; dock) |
+| I-05 | Epiphany launches | PASS (rendering caveat) | `03-browser: epiphany running=True`; the panel lists the window as `Blank page` with the Epiphany icon (`docs/screenshots/browser.png`) |
+| I-06 | Log Out uses the session helper | PASS | `AURORA_SESSION_ACTION action=logout`; `04-after-logout: ubuntu session gone=True`; greeter redrawn |
+| I-07 | Second login works | PASS | `05-login-again: login attempt 1 detected=True` |
+| I-08 | Switch User uses LightDM dm-tool | PASS | `AURORA_SESSION_ACTION action=switch method=dm-tool`; `06-after-switch: new greeter session=True` while the `ubuntu` session stayed alive |
+| I-09 | DPMS cannot blank the screen | PASS | `xset q`: `Server does not have the DPMS Extension` |
+| I-10 | Offline-only units no longer stall the boot | PASS (partial measurement) | `networkd-dispatcher` and `casper-md5check` are masked symlinks to `/dev/null`; `DefaultTimeoutStartSec=30s`; p4/p7 boot logs no longer show the 2-minute network job waits. `systemd-analyze` output was not captured reliably under TCG |
+| I-11 | Test VM stops without a crash | PASS | harness quits QEMU; guest-initiated shutdown/restart NOT TESTED |
+
+Caveats:
+
+- Under TCG, WebKit creates the window (panel entry) but painting the page took longer than the
+  capture window; the browser is functional, a fully painted page is not yet captured as evidence
+  (KI-032).
+- The image remains test-profile only: root serial autologin (KI-018), BIOS-only (KI-015), no
+  installer, no Plymouth.
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)

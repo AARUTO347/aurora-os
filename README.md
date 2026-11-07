@@ -159,6 +159,10 @@ aurora-os/
 |:------------:|:-----------:|
 | ![Logout](docs/screenshots/after-logout.png) | ![Switch](docs/screenshots/switch-user.png) |
 
+| GNOME Web running |
+|:-----------------:|
+| ![Browser](docs/screenshots/browser.png) |
+
 ## License
 
 Source code and distribution configuration: **MIT** — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
