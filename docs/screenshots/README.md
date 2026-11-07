@@ -1,7 +1,7 @@
 # Screenshots
 
 All images are QEMU `screendump` captures from the 0.4.0-dev ISO
-(SHA256 `8ec1e5cca2573c85ce7708facdbe44e86ff926541e3d8a0e577126ee88e4cbdf`),
+(SHA256 `f80a65e016fc630acdce8dc6ca5d99129a3518839428b0a20d043a45712db38f`),
 1280x800, `-vga std`, TCG.
 
 | File | What it shows | Run |

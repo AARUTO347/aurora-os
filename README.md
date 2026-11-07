@@ -50,14 +50,13 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 - **GNOME Web browser** (Epiphany 49.2) with an AURORA Browser launcher
 - **Session actions** — Log Out, Switch User (LightDM dm-tool) and Lock Screen
 - **Fast boot** — offline-only units masked, 30 s systemd job timeouts, apt fast-fail
-- **Session management** — logout, switch user, lock screen
-- **BIOS compatible** — works in QEMU, VMware, and on real hardware
+- **BIOS-only image** — tested in QEMU (UEFI not supported; no installer)
 
 ## Download
 
 | Version | Size | SHA256 |
 |---------|------|--------|
-| [v0.3.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev) | 693 MB | `ebc54345bbf131c0d63e8c84e2821ae17347f7b18479f68ea103c9aee135af90` |
+| [v0.4.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.4.0-dev) | 742 MB | `f80a65e016fc630acdce8dc6ca5d99129a3518839428b0a20d043a45712db38f` |
 
 > **Note:** BIOS-only live image. UEFI boot not yet supported (KI-015).
 

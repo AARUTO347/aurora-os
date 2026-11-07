@@ -5,7 +5,11 @@
 # live image does not grant (no AppArmor profile is loaded for the browser,
 # KI-032), and the emulated Xorg has no hardware GL. Run WebKit's software
 # path without its sandbox so the browser works in the live demo.
+export HOME="${HOME:-/home/ubuntu}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+export GDK_BACKEND=x11
 export LIBGL_ALWAYS_SOFTWARE=1
 export WEBKIT_DISABLE_COMPOSITING_MODE=1
+export WEBKIT_DISABLE_DMABUF_RENDERER=1
 export WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS=1
 exec epiphany "$@"
