@@ -56,7 +56,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 | Version | Size | SHA256 |
 |---------|------|--------|
-| [v0.4.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.4.0-dev) | 742 MB | `ad7317af165926d39b29443a1cda43cc061ecaefdc1d9310f2df748ca4178d44` |
+| [v0.4.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.4.0-dev) | 855 MB | `ad7317af165926d39b29443a1cda43cc061ecaefdc1d9310f2df748ca4178d44` |
 
 > **Note:** BIOS-only live image. UEFI boot not yet supported (KI-015).
 

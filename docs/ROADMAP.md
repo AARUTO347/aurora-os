@@ -138,7 +138,7 @@ clean typography). Palette tokens are fixed in `ARCHITECTURE.md` section 4.
 
 ### Result (0.4.0-dev, 2026-11-06)
 
-- ISO: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 742,064,128 bytes, SHA256
+- ISO: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 896,860,160 bytes, SHA256
   `ad7317af165926d39b29443a1cda43cc061ecaefdc1d9310f2df748ca4178d44`; initrd kept at
   `d203e1a3...`.
 - Browser: GNOME Web (Epiphany 49.2) ships in the image with an **AURORA Browser** launcher;

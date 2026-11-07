@@ -194,7 +194,7 @@ Caveats recorded with the PASS:
 
 ## Phase I - 0.4.0-dev browser, session actions and boot tuning (2026-11-06)
 
-Image: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 742,064,128 bytes, SHA256
+Image: `artifacts/aurora-os-0.4.0-dev-amd64.iso`, 896,860,160 bytes, SHA256
 `ad7317af165926d39b29443a1cda43cc061ecaefdc1d9310f2df748ca4178d44`. The squashfs was built
 directly from the verified chroot and remapped into the ISO; the casper initrd is the known-good
 `d203e1a3...` image. QEMU 10.2.1 TCG, 4 vCPU, 3072 MiB, `-vga std`.
