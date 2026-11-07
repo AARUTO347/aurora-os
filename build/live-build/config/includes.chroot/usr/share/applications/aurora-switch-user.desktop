@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=AURORA Switch User
-Comment=Return to the AURORA login screen
-Exec=xfce4-session-logout --switch-user
+Comment=Show the AURORA login screen and keep this session
+Exec=/usr/local/bin/aurora-session-action switch
 Icon=system-users
 Terminal=false
 Categories=System;Session;

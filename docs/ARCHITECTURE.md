@@ -32,7 +32,7 @@ Host: Windows 11 / HP 250 G8
         +-- QEMU (KVM when available) -> serial log, VNC on 127.0.0.1, screendump evidence
 ```
 
-Inside the 0.3.0-dev graphical live ISO:
+Inside the 0.4.0-dev graphical live ISO:
 
 ```
 GRUB 2.14 (BIOS El Torito)
@@ -47,7 +47,8 @@ GRUB 2.14 (BIOS El Torito)
   -> user logs in as ubuntu -> aurora-vt activates VT7
   -> XFCE 4.20 session (xfce4-session, xfwm4, xfce4-panel, xfdesktop)
   -> AURORA wallpaper, Arc-Dark theme, elementary-xfce icons, DejaVu fonts
-  -> xfce4-terminal (verified); other applications installed but NOT TESTED
+  -> xfce4-terminal (verified), Epiphany browser (0.4.0-dev, see TESTING.md);
+     other applications installed but NOT TESTED
   -> [Next] Plymouth splash, AURORA apps
 ```
 
@@ -68,6 +69,7 @@ The Milestone 1 image (0.1.0-dev, 2026-10-31) stopped at `multi-user.target` wit
 | Desktop environment | XFCE 4.20 | Low memory, stable, configurable; suited to 4 threads / 5.7 GiB WSL build host | Verified 2026-11-05 |
 | Shell | XFCE panel; Whisker Menu + dock plugin or Plank | Builds on the window manager instead of conflicting with it | Panel/dock present with defaults; deliberate AURORA layout NOT TESTED |
 | Terminal | xfce4-terminal | Real shell, tabs, scrollback; color palette can be themed | Verified 2026-11-05 |
+| Browser | GNOME Web (Epiphany 49.2) | Real deb (Ubuntu's Firefox/Chromium are snap stubs); GTK, matches the session theme | Added in 0.4.0-dev |
 | File manager | Thunar | Real filesystem operations, removable media support | Installed; operations NOT TESTED |
 | Settings | xfce4-settings plus an AURORA settings hub | Only expose settings that are actually implemented and tested | NOT TESTED |
 | Networking | NetworkManager | Standard Wi-Fi/Ethernet management | Not integrated; image is offline in QEMU |

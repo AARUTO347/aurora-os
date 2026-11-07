@@ -108,7 +108,7 @@ Package list `config/package-lists/aurora.list.chroot` (0.2.0-dev): `linux-image
 `xserver-xorg-core`, `xserver-xorg-input-libinput`, `xserver-xorg-video-vesa`,
 `xserver-xorg-video-fbdev`, `xinit`, `x11-xserver-utils`, `dbus-x11`, `lightdm`,
 `lightdm-gtk-greeter`, `xfce4`, `xfce4-terminal`, `arc-theme`, `elementary-xfce-icon-theme`,
-`adwaita-icon-theme`, `xcursor-themes`, `fonts-dejavu-core`. `--apt-recommends false` is still
+`adwaita-icon-theme`, `xcursor-themes`, `fonts-dejavu-core`, `epiphany-browser`. `--apt-recommends false` is still
 set; every installed package is listed explicitly.
 
 ### 3.2 GRUB 2.14 workarounds (required)
@@ -154,6 +154,8 @@ live-build; no runtime network access is required.
 | `etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml` | wallpaper for `monitorVirtual-1` |
 | `usr/share/aurora/wallpaper.png` | 1792x1024 aurora gradient |
 | `usr/local/bin/aurora-wallpaper` | waits for xfconf, sets the backdrop, logs `AURORA_GUI_SESSION_OK` |
+| `usr/local/bin/aurora-session-action` | logout/switch/lock helper: restores the session bus, uses `dm-tool switch-to-greeter` for switch-user |
+| `etc/skel/Desktop/aurora-browser.desktop` | **AURORA Browser** icon launching Epiphany |
 | `etc/xdg/autostart/aurora-wallpaper.desktop` | runs the wallpaper script in the XFCE session |
 
 `config/hooks/0400-gui.chroot` sets `graphical.target` as default, enables `lightdm.service`, and
@@ -248,7 +250,7 @@ keeps screenshots plus the full serial log:
 ```bash
 mkdir -p /home/aaruto/aurora-test/run1
 python3 scripts/qemu-login-test.py \
-    /home/aaruto/aurora-build/artifacts/aurora-os-0.3.0-dev-amd64.iso \
+    /home/aaruto/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso \
     /home/aaruto/aurora-test/run1
 ```
 
@@ -315,4 +317,5 @@ myOS is not part of AURORA and must not be modified as part of this roadmap.
 | An `ubuntu seat0` session exists before any password is typed | casper injects `autologin-user=ubuntu` into `lightdm.conf` at boot | `90-aurora.conf` plus the cleanup in `aurora-identity.service` (KI-028) |
 | Panel says "Live session user" | `accountsservice` missing | Resolved in 0.3.0-dev (KI-023) |
 | apt 403 on all mirrors | User-Agent filtering | Inspect `/etc/apt/apt.conf.d/99local-useragent`; run `scripts/diagnose-apt.sh` |
+| Boot stalls 2 minutes before the desktop | offline `networkd-dispatcher`/checksum units | masked by `0400-gui.chroot`; `DefaultTimeoutStartSec=30s`; apt retries disabled |
 | Out of memory during build/boot | WSL limit (5.7 GiB) | Serialize build and QEMU; keep guest at 2048 MiB |

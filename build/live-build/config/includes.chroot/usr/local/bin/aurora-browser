@@ -1,0 +1,11 @@
+#!/bin/sh
+# Launch GNOME Web in the AURORA live session.
+#
+# WebKit's bubblewrap sandbox needs unprivileged user namespaces, which the
+# live image does not grant (no AppArmor profile is loaded for the browser,
+# KI-032), and the emulated Xorg has no hardware GL. Run WebKit's software
+# path without its sandbox so the browser works in the live demo.
+export LIBGL_ALWAYS_SOFTWARE=1
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+export WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS=1
+exec epiphany "$@"

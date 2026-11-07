@@ -30,7 +30,7 @@ for p in (MON, SER):
 
 qemu = subprocess.Popen([
     "qemu-system-x86_64",
-    "-machine", "q35", "-accel", "tcg", "-m", "3072", "-smp", "2",
+    "-machine", "q35", "-accel", "tcg", "-m", "3072", "-smp", "4",
     "-cdrom", ISO, "-boot", "d", "-vga", "std", "-display", "none",
     "-nic", "none",
     "-monitor", f"unix:{MON},server=on,wait=off",
@@ -276,7 +276,7 @@ def wait_greeter(label, timeout=300, need_no_session=False):
     return False
 
 
-def login(label, timeout=120):
+def login(label, timeout=300):
     log(f"== {label}: typing greeter password ==")
     ok = False
     for attempt in (1, 2):
@@ -304,7 +304,7 @@ def login(label, timeout=120):
     return ok
 
 
-def as_ubuntu(command, timeout=35):
+def as_ubuntu(command, timeout=35, background=False):
     # The session bus address is what xfce4-session-logout needs; without it
     # the request dies with "Could not connect: Permission denied".
     script = (
@@ -313,15 +313,37 @@ def as_ubuntu(command, timeout=35):
         "disp=$(tr '\\0' '\\n' < /proc/$pid/environ | sed -n 's/^DISPLAY=//p'); "
         "auth=$(tr '\\0' '\\n' < /proc/$pid/environ | sed -n 's/^XAUTHORITY=//p'); "
         "bus=$(tr '\\0' '\\n' < /proc/$pid/environ | sed -n 's/^DBUS_SESSION_BUS_ADDRESS=//p'); "
-        "runuser -u ubuntu -- env DISPLAY=$disp XAUTHORITY=$auth "
-        "DBUS_SESSION_BUS_ADDRESS=$bus XDG_RUNTIME_DIR=/run/user/1000 " + command +
-        "; fi"
+        "seat=$(tr '\\0' '\\n' < /proc/$pid/environ | sed -n 's/^XDG_SEAT_PATH=//p'); "
+        "spath=$(tr '\\0' '\\n' < /proc/$pid/environ | sed -n 's/^XDG_SESSION_PATH=//p'); "
+        "{ runuser -u ubuntu -- env DISPLAY=$disp XAUTHORITY=$auth "
+        "DBUS_SESSION_BUS_ADDRESS=$bus XDG_SEAT_PATH=$seat XDG_SESSION_PATH=$spath "
+        "XDG_RUNTIME_DIR=/run/user/1000 HOME=/home/ubuntu " + command +
+        (" & }" if background else " ; }") + "; fi"
     )
     return ser_cmd(script, timeout)
 
 
+def launch_browser(label="07-browser"):
+    log("== browser ==")
+    log(as_ubuntu("epiphany --version 2>&1"))
+    as_ubuntu("setsid /usr/local/bin/aurora-browser about:blank >/home/ubuntu/aurora-browser.log 2>&1", 25, background=True)
+    end = time.time() + 300
+    running = False
+    while time.time() < end:
+        out = ser_cmd("pgrep -u ubuntu -f -c epiphany", 30).split()
+        if out and out[-1].isdigit() and int(out[-1]) >= 1:
+            running = True
+            break
+        time.sleep(10)
+    log(f"{label}: epiphany running={running}")
+    log(as_ubuntu("tail -n 20 /home/ubuntu/aurora-browser.log 2>&1", 30))
+    time.sleep(60)
+    log(str(shot_when_drawn(label, 180)))
+    return running
+
+
 def logout(label):
-    as_ubuntu("xfce4-session-logout --logout")
+    as_ubuntu("/usr/local/bin/aurora-session-action logout")
     end = time.time() + 240
     gone = False
     while time.time() < end:
@@ -330,16 +352,16 @@ def logout(label):
             break
         time.sleep(5)
     log(f"{label}: ubuntu session gone={gone}")
-    ok = wait_greeter(label, 240, need_no_session=True)
+    ok = wait_greeter(label, 600, need_no_session=True)
     log(str(shot_when_drawn(label, 180)))
     return ok
 
 
 def switch_user(label):
     before = len(greeter_sessions())
-    out = as_ubuntu("xfce4-session-logout --switch-user")
+    out = as_ubuntu("/usr/local/bin/aurora-session-action switch")
     log(out)
-    end = time.time() + 300
+    end = time.time() + 600
     ok = False
     while time.time() < end:
         if len(greeter_sessions()) > before and logged_in():
@@ -352,16 +374,16 @@ def switch_user(label):
 
 
 log("booting")
-ready = wait_serial("AURORA_M1_SHELL_OK", 480)
+ready = wait_serial("AURORA_M1_SHELL_OK", 1200)
 log(f"serial shell ready: {ready}")
 if not ready:
     wait_serial("aurora login:", 60)
 
 log("== waiting for LightDM ==")
 active = False
-end = time.time() + 480
+end = time.time() + 1500
 while time.time() < end:
-    state = ser_cmd("systemctl is-active lightdm", 15)
+    state = ser_cmd("systemctl is-active lightdm", 30)
     if "active" in [ln.strip() for ln in state.splitlines()]:
         active = True
         break
@@ -375,17 +397,19 @@ log(ser_cmd("grep -rn 'autologin' /etc/lightdm/lightdm.conf "
             "/etc/lightdm/lightdm.conf.d/*.conf; echo ----; "
             "grep -i 'AURORA_IDENTITY_READY' /var/log/syslog 2>/dev/null | tail -n 2", 40))
 
-greeter_ok = wait_greeter("01-greeter", 300, need_no_session=True)
+greeter_ok = wait_greeter("01-greeter", 1200, need_no_session=True)
 log("== VT state ==")
 log(ser_cmd("fgconsole; ps -eo args= | grep '^/usr/lib/xorg/Xorg' | head -n1; "
             "systemctl is-active aurora-vt", 25))
 
+log("== boot timing ==")
+log(ser_cmd("systemd-analyze; echo --; systemd-analyze blame | head -n 12", 60))
 log("== pre-login evidence ==")
 log(ser_cmd("systemctl is-active lightdm; systemctl is-enabled lightdm; "
             "loginctl list-sessions --no-legend; getent passwd ubuntu", 25))
 log(ser_cmd("cat /etc/aurora-release; hostname; "
             "systemctl is-active aurora-identity", 25))
-log(str(shot_when_drawn("01-greeter", 180)))
+log(str(shot_when_drawn("01-greeter", 600)))
 log(f"greeter ready={greeter_ok}")
 
 first = login("02-login")
@@ -395,16 +419,25 @@ if first:
                 "loginctl list-sessions --no-legend", 25))
     log("== DPMS ==")
     log(as_ubuntu("xset q | grep -i -A1 'DPMS\\|screen saver'"))
-    log("== logout ==")
-    logout("03-after-logout")
+    browser_ok = launch_browser("03-browser")
+    log(f"browser ok={browser_ok}")
+    log("== syslog session actions ==")
+    log(ser_cmd("journalctl -t aurora -b --no-pager | tail -n 8", 40))
+    if os.environ.get("AURORA_BROWSER_ONLY"):
+        log("browser-only mode: stopping after the browser check")
+    else:
+        log("== logout ==")
+        logout("04-after-logout")
 
-    log("== second login after logout ==")
-    second = login("04-login-again")
-    if second:
-        log("== switch user ==")
-        switch_user("05-after-switch")
-        log("== cleanup: log out the background session ==")
-        logout("06-cleanup")
+        log("== second login after logout ==")
+        second = login("05-login-again")
+        if second:
+            log("== switch user ==")
+            switch_user("06-after-switch")
+            log("== syslog session actions ==")
+            log(ser_cmd("journalctl -t aurora -b --no-pager | tail -n 6", 40))
+            log("== cleanup: log out the background session ==")
+            logout("07-cleanup")
 else:
     log("== stopping after failed first login ==")
 

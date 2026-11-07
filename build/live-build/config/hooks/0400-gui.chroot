@@ -23,6 +23,7 @@ for f in \
 	/usr/local/bin/aurora-live-password \
 	/usr/local/bin/aurora-identity \
 	/usr/local/bin/aurora-vt \
+	/usr/local/bin/aurora-session-action \
 	/usr/local/bin/aurora-wallpaper \
 	/etc/systemd/system/aurora-live-password.service \
 	/etc/systemd/system/aurora-identity.service \
@@ -32,7 +33,9 @@ for f in \
 	/etc/xdg/autostart/aurora-session.desktop \
 	/etc/skel/Desktop/aurora-logout.desktop \
 	/etc/skel/Desktop/aurora-switch-user.desktop \
-	/etc/skel/Desktop/aurora-lock.desktop; do
+	/etc/skel/Desktop/aurora-lock.desktop \
+	/etc/skel/Desktop/aurora-browser.desktop \
+	/usr/share/applications/aurora-browser.desktop; do
 	if [ ! -e "$f" ]; then
 		echo "0400-gui.chroot: missing $f" >&2
 		exit 1
@@ -44,8 +47,10 @@ chmod 0755 /usr/local/bin/aurora-display-setup \
 	/usr/local/bin/aurora-live-password \
 	/usr/local/bin/aurora-identity \
 	/usr/local/bin/aurora-vt \
+	/usr/local/bin/aurora-session-action \
 	/usr/local/bin/aurora-wallpaper
 chmod 0755 /etc/skel/Desktop/*.desktop
+chmod 0644 /usr/share/applications/aurora-*.desktop
 chmod 0644 /etc/xdg/autostart/aurora-session.desktop \
 	/etc/systemd/system/aurora-live-password.service \
 	/etc/systemd/system/aurora-identity.service \
@@ -54,3 +59,27 @@ chmod 0644 /etc/xdg/autostart/aurora-session.desktop \
 
 # The greeter is only usable if it can read the account list.
 systemctl enable accounts-daemon.service
+
+# Fast boot for an offline live image: units that wait for a network or a
+# checksum file used to stall the boot for minutes before giving up.
+install -d /etc/systemd/system.conf.d
+cat > /etc/systemd/system.conf.d/aurora-timeouts.conf <<'CONF'
+[Manager]
+DefaultTimeoutStartSec=30s
+DefaultTimeoutStopSec=20s
+CONF
+
+for u in networkd-dispatcher.service casper-md5check.service e2scrub_reap.service \
+	grub-initrd-fallback.service grub2-common.service ua-reboot-cmds.service \
+	ubuntu-advantage.service systemd-networkd-wait-online.service \
+	apt-daily.timer apt-daily-upgrade.timer motd-news.timer; do
+	systemctl disable "$u" >/dev/null 2>&1 || true
+	systemctl mask "$u" >/dev/null 2>&1 || true
+done
+
+# casper runs apt update at boot; fail quickly when the guest is offline.
+cat > /etc/apt/apt.conf.d/99-aurora-live <<'CONF'
+Acquire::http::Timeout "3";
+Acquire::https::Timeout "3";
+Acquire::Retries "0";
+CONF

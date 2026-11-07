@@ -1,0 +1,38 @@
+#!/bin/sh
+# Session menu actions for the AURORA desktop.
+#
+# xfce4-session-logout needs the session bus; launchers started from a shell
+# without it failed with "Could not connect: Permission denied" (KI-030). The
+# switch action prefers LightDM's dm-tool, which asks the display manager
+# directly and keeps the current session alive.
+set -u
+
+action=${1:-logout}
+
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && [ -S "/run/user/$(id -u)/bus" ]; then
+	DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
+	export DBUS_SESSION_BUS_ADDRESS
+fi
+
+case "$action" in
+switch)
+	if command -v dm-tool >/dev/null 2>&1 && dm-tool switch-to-greeter; then
+		logger -t aurora "AURORA_SESSION_ACTION action=switch method=dm-tool"
+		exit 0
+	fi
+	logger -t aurora "AURORA_SESSION_ACTION action=switch method=xfce4-session-logout"
+	exec xfce4-session-logout --switch-user
+	;;
+logout)
+	logger -t aurora "AURORA_SESSION_ACTION action=logout"
+	exec xfce4-session-logout --logout
+	;;
+lock)
+	logger -t aurora "AURORA_SESSION_ACTION action=lock"
+	exec xflock4
+	;;
+*)
+	echo "usage: aurora-session-action switch|logout|lock" >&2
+	exit 2
+	;;
+esac

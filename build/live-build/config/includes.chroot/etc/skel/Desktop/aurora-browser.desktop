@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Browser
+Comment=Browse the web with GNOME Web (Epiphany)
+Exec=/usr/local/bin/aurora-browser
+Icon=web-browser
+Terminal=false
+Categories=Network;WebBrowser;
+Keywords=browser;web;internet;epiphany;aurora;
+StartupNotify=false

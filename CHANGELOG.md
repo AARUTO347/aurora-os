@@ -3,6 +3,31 @@
 All notable changes to AURORA OS are recorded here. Versions follow
 `MAJOR.MINOR.PATCH` with a `-dev` suffix for images that are not releases.
 
+## [0.4.0-dev] — 2026-11-06
+
+### Added
+
+- GNOME Web (Epiphany 49.2) as the default browser, with an **AURORA Browser**
+  desktop icon and application-menu entry. Ubuntu's Firefox/Chromium packages
+  are snap stubs, so a browser shipped as a normal deb was required.
+- `aurora-session-action` helper used by the Log Out, Switch User and Lock
+  Screen icons. It restores `DBUS_SESSION_BUS_ADDRESS` when a launcher starts
+  without the session bus and performs Switch User through LightDM's
+  `dm-tool switch-to-greeter`, falling back to `xfce4-session-logout`.
+- Milestone 3 identity: `/etc/aurora-release`, `os-release` and `lsb-release`
+  report `0.4.0-dev (Milestone 3)`.
+
+### Changed
+
+- Session action launchers no longer call `xfce4-session-logout` directly, so
+  they cannot hit "Could not connect: Permission denied" outside a session bus.
+- Credits page URL corrected to `https://github.com/AARUTO347/aurora-os`.
+
+### Fixed
+
+- Build chroot had a dangling `/etc/resolv.conf` symlink; the build now copies
+  the host resolver into the chroot before installing packages (KI-031).
+
 ## [0.3.0-dev] — 2026-11-05
 
 ### Added

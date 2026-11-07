@@ -27,7 +27,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 ## Current Status
 
-**Milestone 2 — PASS** (Identity, login, and graphical live session verified)
+**0.4.0-dev — login, desktop, browser, logout and switch-user verified** (Milestone 3 in progress)
 
 | Milestone | Description | Status |
 |:---------:|-------------|:------:|
@@ -47,6 +47,9 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 - **Arc-Dark** theme with elementary-xfce icons
 - **AURORA branding** throughout — wallpaper, identity files, hostname
 - **Live session** — runs entirely from ISO, no installation needed
+- **GNOME Web browser** (Epiphany 49.2) with an AURORA Browser launcher
+- **Session actions** — Log Out, Switch User (LightDM dm-tool) and Lock Screen
+- **Fast boot** — offline-only units masked, 30 s systemd job timeouts, apt fast-fail
 - **Session management** — logout, switch user, lock screen
 - **BIOS compatible** — works in QEMU, VMware, and on real hardware
 
@@ -64,7 +67,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 ```bash
 qemu-system-x86_64 -machine q35 -accel tcg -m 2048 -smp 2 \
-  -cdrom aurora-os-0.3.0-dev-amd64.iso -boot d -vga std \
+  -cdrom aurora-os-0.4.0-dev-amd64.iso -boot d -vga std \
   -display gtk,zoom-to-fit=on -vnc 127.0.0.1:1 \
   -serial file:/tmp/aurora-serial.log -no-reboot
 ```
@@ -112,8 +115,8 @@ make boot         # QEMU TCG with loopback VNC on 127.0.0.1:5901
 ### Build Output
 
 ```
-$HOME/aurora-build/artifacts/aurora-os-0.3.0-dev-amd64.iso
-$HOME/aurora-build/artifacts/aurora-os-0.3.0-dev-amd64.iso.sha256
+$HOME/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso
+$HOME/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso.sha256
 ```
 
 Full build instructions: [docs/BUILD_AND_RUN.md](docs/BUILD_AND_RUN.md)

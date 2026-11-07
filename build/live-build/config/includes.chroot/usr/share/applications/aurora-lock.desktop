@@ -2,7 +2,7 @@
 Type=Application
 Name=AURORA Lock Screen
 Comment=Lock the current AURORA session
-Exec=xflock4
+Exec=/usr/local/bin/aurora-session-action lock
 Icon=system-lock-screen
 Terminal=false
 Categories=System;Security;

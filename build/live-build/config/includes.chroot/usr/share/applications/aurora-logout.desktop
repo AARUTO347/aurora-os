@@ -2,7 +2,7 @@
 Type=Application
 Name=AURORA Log Out
 Comment=End the current AURORA session
-Exec=xfce4-session-logout --logout
+Exec=/usr/local/bin/aurora-session-action logout
 Icon=system-log-out
 Terminal=false
 Categories=System;Session;
