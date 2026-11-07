@@ -7,9 +7,10 @@ All notable changes to AURORA OS are recorded here. Versions follow
 
 ### Added
 
-- GNOME Web (Epiphany 49.2) as the default browser, with an **AURORA Browser**
-  desktop icon and application-menu entry. Ubuntu's Firefox/Chromium packages
-  are snap stubs, so a browser shipped as a normal deb was required.
+- AURORA Browser: Falkon 25.12 (Chromium/QtWebEngine) as the default, with a
+  desktop icon and menu entry; GNOME Web (Epiphany 49.2) also ships as a
+  fallback. Ubuntu's Firefox/Chromium packages are snap stubs, so real debs
+  were required.
 - `aurora-session-action` helper used by the Log Out, Switch User and Lock
   Screen icons. It restores `DBUS_SESSION_BUS_ADDRESS` when a launcher starts
   without the session bus and performs Switch User through LightDM's

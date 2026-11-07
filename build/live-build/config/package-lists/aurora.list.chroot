@@ -22,8 +22,9 @@ xfce4
 xfce4-terminal
 light-locker
 
-# Milestone 3: internet browser (real deb, not the Ubuntu snap stub)
+# Milestone 3: internet browser (real debs, not the Ubuntu snap stubs)
 epiphany-browser
+falkon
 
 # Milestone 2: dark aurora look
 arc-theme

@@ -330,14 +330,16 @@ def launch_browser(label="07-browser"):
     end = time.time() + 300
     running = False
     while time.time() < end:
-        out = ser_cmd("pgrep -u ubuntu -f -c epiphany", 30).split()
+        out = ser_cmd("pgrep -u ubuntu -f -c falkon", 30).split()
         if out and out[-1].isdigit() and int(out[-1]) >= 1:
             running = True
             break
         time.sleep(10)
-    log(f"{label}: epiphany running={running}")
+    log(f"{label}: browser running={running}")
     log(as_ubuntu("tail -n 20 /home/ubuntu/aurora-browser.log 2>&1", 30))
-    time.sleep(60)
+    time.sleep(120)
+    mon_cmd("sendkey alt-tab", 1.0)
+    time.sleep(15)
     log(str(shot_when_drawn(label, 180)))
     return running
 

@@ -47,7 +47,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 - **Arc-Dark** theme with elementary-xfce icons
 - **AURORA branding** throughout — wallpaper, identity files, hostname
 - **Live session** — runs entirely from ISO, no installation needed
-- **GNOME Web browser** (Epiphany 49.2) with an AURORA Browser launcher — ships, but WebKit aborts under the TCG test VM (KI-032)
+- **AURORA Browser** (Falkon, Chromium engine) with a launcher — opens a window, but page rendering needs a GPU-capable VM (KI-032)
 - **Session actions** — Log Out, Switch User (LightDM dm-tool) and Lock Screen
 - **Fast boot** — offline-only units masked, 30 s systemd job timeouts, apt fast-fail
 - **BIOS-only image** — tested in QEMU (UEFI not supported; no installer)
@@ -157,6 +157,10 @@ aurora-os/
 | After Logout | Switch User |
 |:------------:|:-----------:|
 | ![Logout](docs/screenshots/after-logout.png) | ![Switch](docs/screenshots/switch-user.png) |
+
+| AURORA Browser (Falkon) |
+|:------------------------:|
+| ![Browser](docs/screenshots/browser.png) |
 
 
 
