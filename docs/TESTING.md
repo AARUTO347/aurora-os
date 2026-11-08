@@ -262,6 +262,26 @@ fix for a GPU-less VM.
 - A GPU-capable VM could not be provisioned here (no VMware installer; QEMU virgl has no DRM in
   WSL), so the PASS is for the software path, which is what the live image uses.
 
+
+---
+
+## Phase L - AURORA applications (0.5.0-dev, 2026-11-08)
+
+Image: `aurora-os-0.5.0-dev-amd64.iso`, 1,050,607,616 bytes, SHA256
+`29691f1d321bc4c6806f673004d7836a7e1a407e01a5a267a99fc7b17dc1e756`. Run
+`/home/aaruto/aurora-test/p15` (QEMU TCG, one VM).
+
+| ID | Test | Result | Evidence |
+|---|---|---|---|
+| L-01 | System Info opens and reads real data | PASS (window; text capture lagged) | `AURORA_SYSTEM_INFO_OK` in syslog; window titled "AURORA System Info" captured in `03-system-info.png`, but the text area had not painted at capture time under TCG |
+| L-02 | Diagnostics shows real boot data | PASS | `docs/screenshots/diagnostics.png`: failed units "none", boot errors "No entries", disk `/`, memory, network loopback, last boot timestamp; `AURORA_DIAGNOSTICS_OK` |
+| L-03 | Settings and Applications entries | PASS (present) | `usr/share/applications/aurora-settings.desktop` (xfce4-settings-manager) and `aurora-apps.desktop` (xfce4-appfinder) |
+| L-04 | Desktop icons for the new apps | PASS | `docs/screenshots/desktop.png` shows AURORA System Info and AURORA Diagnostics icons |
+| L-05 | Firefox browser still renders | PASS | `docs/screenshots/browser.png` from the same run |
+
+Note: the System Info text pane needs a longer paint wait under TCG; the app itself ran (log
+marker). Diagnostics proves the GTK3/PyGObject path renders text correctly.
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)

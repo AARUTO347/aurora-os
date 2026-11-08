@@ -53,6 +53,7 @@ split (KI-018).
 - **Live session** — runs entirely from ISO, no installation needed
 - **AURORA Browser** (Mozilla Firefox 159.0.1, software WebRender) with a launcher — renders fully without a GPU; Falkon and Epiphany remain installed as fallbacks
 - **Session actions** — Log Out, Switch User (LightDM dm-tool) and Lock Screen
+- **AURORA apps** — System Info (kernel, CPU, memory, storage, session), Diagnostics (failed units, boot errors, resources), Settings and Applications launchers
 - **Fast boot** — offline-only units masked, 30 s systemd job timeouts, apt fast-fail
 - **BIOS-only image** — tested in QEMU (UEFI not supported; no installer)
 
@@ -60,7 +61,7 @@ split (KI-018).
 
 | Version | Size | SHA256 |
 |---------|------|--------|
-| [v0.5.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev) | 1002 MB | `d631d18b688f00bb75c1ed36add853d982237b724d5a812abb440a2e976dbf9e` |
+| [v0.5.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev) | 1002 MB | `29691f1d321bc4c6806f673004d7836a7e1a407e01a5a267a99fc7b17dc1e756` |
 
 > **Note:** BIOS-only live image. UEFI boot not yet supported (KI-015).
 
@@ -162,9 +163,9 @@ aurora-os/
 |:------------:|:-----------:|
 | ![Logout](docs/screenshots/after-logout.png) | ![Switch](docs/screenshots/switch-user.png) |
 
-| AURORA Browser (Firefox) |
-|:------------------------:|
-| ![Browser](docs/screenshots/browser.png) |
+| AURORA Browser (Firefox) | AURORA Diagnostics |
+|:------------------------:|:-------------------:|
+| ![Browser](docs/screenshots/browser.png) | ![Diagnostics](docs/screenshots/diagnostics.png) |
 
 | AURORA Browser (Falkon) |
 |:------------------------:|

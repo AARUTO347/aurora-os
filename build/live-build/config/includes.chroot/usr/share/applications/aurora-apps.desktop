@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Applications
+Comment=Find and launch installed applications
+Exec=xfce4-appfinder
+Icon=view-app-grid
+Terminal=false
+Categories=Utility;
+Keywords=apps;launcher;menu;aurora;
+StartupNotify=false

@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""AURORA Diagnostics - failed units, boot errors, and resource warnings."""
+import os
+import re
+import subprocess
+import sys
+
+os.environ.setdefault("GDK_BACKEND", "x11")
+
+
+def sh(cmd):
+    try:
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True,
+                              timeout=15).stdout.strip()
+    except Exception:
+        return ""
+
+
+def redact(text):
+    # Never print credentials or cloud tokens that could land in journald.
+    text = re.sub(r"(?i)(password|passwd|token|secret|api[_-]?key)\s*[=:]\s*\S+",
+                  r"\1=<redacted>", text)
+    return text
+
+
+def collect():
+    lines = ["== AURORA Diagnostics ==", ""]
+    failed = sh("systemctl --failed --no-legend --no-pager")
+    lines.append("Failed systemd units: " + ("none" if not failed else ""))
+    if failed:
+        lines.extend(failed.splitlines())
+    lines.append("")
+    lines.append("== Boot errors (priority <= err) ==")
+    errs = sh("journalctl -b -p 3 --no-pager -n 25 -o short-precise")
+    lines.append(redact(errs) if errs else "none in this boot")
+    lines.append("")
+    lines.append("== Disk ==")
+    lines.extend(sh("df -h / /home 2>/dev/null | sort -u").splitlines())
+    lines.append("")
+    lines.append("== Memory ==")
+    lines.extend(sh("free -h").splitlines())
+    lines.append("")
+    lines.append("== Network ==")
+    iface = sh("ip -brief link 2>/dev/null")
+    lines.append(iface if iface else "no network interfaces reported")
+    lines.append("")
+    lines.append("== Last boot ==")
+    lines.append(sh("who -b"))
+    return "\n".join(lines)
+
+
+def show(text):
+    try:
+        import gi
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import Gtk
+    except Exception:
+        subprocess.run(["zenity", "--text-info", "--title=AURORA Diagnostics",
+                        "--width=1000", "--height=680"], input=text, text=True)
+        return
+    win = Gtk.Window(title="AURORA Diagnostics")
+    win.set_default_size(1000, 680)
+    win.connect("destroy", Gtk.main_quit)
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    win.add(box)
+    head = Gtk.Label()
+    head.set_markup("<b>AURORA Diagnostics</b>  <small>boot errors are redacted</small>")
+    head.set_xalign(0)
+    box.pack_start(head, False, False, 6)
+    sw = Gtk.ScrolledWindow()
+    sw.set_hexpand(True)
+    sw.set_vexpand(True)
+    view = Gtk.TextView()
+    view.set_editable(False)
+    view.set_monospace(True)
+    view.get_buffer().set_text(text)
+    sw.add(view)
+    box.pack_start(sw, True, True, 0)
+    btn = Gtk.Button(label="Copy to clipboard")
+    btn.connect("clicked", lambda *_: Gtk.Clipboard.get(
+        __import__("gi.repository.Gdk", fromlist=["Gdk"]).SELECTION_CLIPBOARD).set_text(text, -1))
+    box.pack_start(btn, False, False, 4)
+    win.show_all()
+    Gtk.main()
+
+
+text = collect()
+subprocess.run(["logger", "-t", "aurora", "AURORA_DIAGNOSTICS_OK"])
+if "--dump" in sys.argv:
+    print(text)
+else:
+    show(text)

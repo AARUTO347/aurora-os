@@ -18,6 +18,9 @@ All notable changes to AURORA OS are recorded here. Versions follow
 ### Changed
 
 - Identity bumped to `0.5.0-dev (Milestone 4)`.
+- AURORA applications: System Info, Diagnostics (failed units, redacted boot errors,
+  resources), Settings (xfce4-settings-manager) and Applications (xfce4-appfinder)
+  launchers, plus desktop icons.
 
 ## [0.4.0-dev] — 2026-11-06
 

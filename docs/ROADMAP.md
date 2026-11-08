@@ -255,7 +255,7 @@ buttons; screenshots and serial logs recorded.
 
 ---
 
-## Milestone 4 - System utilities (NOT STARTED)
+## Milestone 4 - System utilities (IN PROGRESS)
 
 - System information from real sources.
 - Diagnostics: failed units, boot/session errors, package errors, with redaction.
@@ -325,6 +325,8 @@ strictly optional and never blocks boot or login.
 - Browser: Mozilla Firefox 159.0.1 with software WebRender renders fully under QEMU TCG
   (`aurora-test/p14`, `docs/screenshots/browser.png`); KI-032 closed.
 - Identity `0.5.0-dev (Milestone 4)`.
+- AURORA apps (Milestone 4/M8 groundwork): System Info, Diagnostics, Settings and Applications
+  launchers; Diagnostics verified against the running system.
 
 ## Immediate next actions
 

@@ -331,7 +331,13 @@ def as_ubuntu(command, timeout=35, background=False):
     return ser_cmd(script, timeout)
 
 
-def launch_browser(label="07-browser"):
+def launch_app(command, label, timeout=150):
+    as_ubuntu(command, 25, background=True)
+    time.sleep(35)
+    log(str(shot_when_drawn(label, timeout)))
+
+
+def launch_browser(label="05-browser"):
     log("== browser ==")
     log(as_ubuntu("/usr/local/bin/aurora-browser --version 2>&1"))
     as_ubuntu("setsid /usr/local/bin/aurora-browser about:blank >/home/ubuntu/aurora-browser.log 2>&1", 25, background=True)
@@ -429,7 +435,13 @@ if first:
                 "loginctl list-sessions --no-legend", 25))
     log("== DPMS ==")
     log(as_ubuntu("xset q | grep -i -A1 'DPMS\\|screen saver'"))
-    browser_ok = launch_browser("03-browser")
+    log("== system info app ==")
+    launch_app("/usr/local/bin/aurora-system-info", "03-system-info")
+    as_ubuntu("pkill -u ubuntu -f aurora-system-info")
+    log("== diagnostics app ==")
+    launch_app("/usr/local/bin/aurora-diagnostics", "04-diagnostics")
+    as_ubuntu("pkill -u ubuntu -f aurora-diagnostics")
+    browser_ok = launch_browser("05-browser")
     log(f"browser ok={browser_ok}")
     log("== syslog session actions ==")
     log(ser_cmd("journalctl -t aurora -b --no-pager | tail -n 8", 40))

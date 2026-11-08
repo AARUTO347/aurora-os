@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Diagnostics
+Comment=Failed units, boot errors and resource warnings
+Exec=/usr/local/bin/aurora-diagnostics
+Icon=dialog-warning
+Terminal=false
+Categories=System;Utility;
+Keywords=diagnostics;errors;logs;aurora;
+StartupNotify=false

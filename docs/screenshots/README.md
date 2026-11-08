@@ -10,6 +10,7 @@ All images are QEMU `screendump` captures from the 0.4.0-dev ISO
 | `desktop.png` | XFCE session after login: panel with `AARUTO`, desktop icons (Home, File System, AURORA Switch User, AURORA Log Out, AURORA Lock Screen, AURORA Browser), dock | `/home/aaruto/aurora-test/p7` |
 | `browser.png` | AURORA Browser (Falkon) window; the web view stays transparent under the software-only Xorg (KI-032) | `/home/aaruto/aurora-test/p10` |
 | `browser.png` | AURORA Browser (Mozilla Firefox) rendering its full window on the XFCE desktop | `/home/aaruto/aurora-test/p14` |
+| `diagnostics.png` | AURORA Diagnostics showing failed units, boot errors, disk, memory and network from the running system | `/home/aaruto/aurora-test/p15` |
 | `after-logout.png` | Greeter after logging out through `aurora-session-action`; the `ubuntu` session is gone | `/home/aaruto/aurora-test/p4` |
 | `switch-user.png` | Greeter after **Switch User** through LightDM `dm-tool`; the background session keeps running | `/home/aaruto/aurora-test/p4` |
 

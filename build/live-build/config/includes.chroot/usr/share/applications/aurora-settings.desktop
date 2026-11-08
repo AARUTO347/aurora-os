@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA Settings
+Comment=Desktop and system settings
+Exec=xfce4-settings-manager
+Icon=preferences-system
+Terminal=false
+Categories=Settings;
+Keywords=settings;preferences;aurora;
+StartupNotify=false

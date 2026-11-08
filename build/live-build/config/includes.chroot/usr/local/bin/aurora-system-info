@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""AURORA System Info - reads the running system, never invents values."""
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import time
+
+os.environ.setdefault("GDK_BACKEND", "x11")
+
+
+def sh(cmd):
+    try:
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True,
+                              timeout=10).stdout.strip()
+    except Exception:
+        return ""
+
+
+def collect():
+    lines = []
+    osrel = ""
+    for path in ("/etc/aurora-release", "/etc/os-release"):
+        if os.path.exists(path):
+            osrel = open(path, encoding="utf-8", errors="replace").read().strip()
+            break
+    lines.append("== Distribution ==")
+    lines.extend(osrel.splitlines())
+    lines.append("")
+    lines.append("== Kernel ==")
+    lines.append(platform.platform())
+    lines.append(sh("uname -a"))
+    lines.append("")
+    lines.append("== Build ==")
+    lines.append("Kernel package: " + sh("dpkg-query -W -f='${Version}' linux-image-7.0.0-42-generic 2>/dev/null"))
+    lines.append("")
+    lines.append("== CPU ==")
+    for ln in sh("lscpu").splitlines():
+        if ln.startswith(("Model name", "CPU(s)", "Thread", "Core", "Socket", "Architecture")):
+            lines.append(ln.strip())
+    lines.append("")
+    lines.append("== Memory ==")
+    for ln in sh("free -h").splitlines():
+        lines.append(ln)
+    lines.append("")
+    lines.append("== Storage ==")
+    for ln in sh("df -h / /home 2>/dev/null | sort -u").splitlines():
+        lines.append(ln)
+    lines.append("")
+    lines.append("== Session ==")
+    lines.append("User: " + sh("id -un") + "  (" + sh("id") + ")")
+    lines.append("Desktop: " + os.environ.get("XDG_CURRENT_DESKTOP", "unknown"))
+    lines.append("Display: " + os.environ.get("DISPLAY", "unknown"))
+    lines.append("Host: " + sh("hostname"))
+    lines.append("Uptime: " + sh("uptime -p"))
+    lines.append("")
+    lines.append("== Services ==")
+    failed = sh("systemctl --failed --no-legend --no-pager")
+    lines.append("Failed units: " + ("none" if not failed else ""))
+    if failed:
+        lines.extend(failed.splitlines())
+    lines.append("")
+    lines.append("== AURORA ==")
+    lines.append("Browser: " + sh("sed -n '2p' /usr/local/bin/aurora-browser 2>/dev/null"))
+    lines.append("Live user: " + sh("getent passwd ubuntu"))
+    return "\n".join(lines)
+
+
+def show(text):
+    try:
+        import gi
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import Gtk
+    except Exception:
+        subprocess.run(["zenity", "--text-info", "--title=AURORA System Info",
+                        "--width=900", "--height=650"], input=text, text=True)
+        return
+
+    win = Gtk.Window(title="AURORA System Info")
+    win.set_default_size(900, 650)
+    win.connect("destroy", Gtk.main_quit)
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    win.add(box)
+    head = Gtk.Label()
+    head.set_markup("<b>AURORA System Info</b>  <small>MADE BY AARUTO</small>")
+    head.set_xalign(0)
+    box.pack_start(head, False, False, 6)
+    sw = Gtk.ScrolledWindow()
+    sw.set_hexpand(True)
+    sw.set_vexpand(True)
+    view = Gtk.TextView()
+    view.set_editable(False)
+    view.set_monospace(True)
+    view.get_buffer().set_text(text)
+    sw.add(view)
+    box.pack_start(sw, True, True, 0)
+    win.show_all()
+    Gtk.main()
+
+
+text = collect()
+subprocess.run(["logger", "-t", "aurora", "AURORA_SYSTEM_INFO_OK"])
+if "--dump" in sys.argv:
+    print(text)
+else:
+    show(text)

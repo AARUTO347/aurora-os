@@ -22,6 +22,9 @@ xfce4
 xfce4-terminal
 light-locker
 
+gir1.2-gtk-3.0
+zenity
+
 # Milestone 3: internet browser (real debs, not the Ubuntu snap stubs)
 epiphany-browser
 falkon

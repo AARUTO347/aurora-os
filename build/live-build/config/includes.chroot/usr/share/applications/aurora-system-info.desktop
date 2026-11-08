@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AURORA System Info
+Comment=Real OS, kernel, CPU, memory, storage and session information
+Exec=/usr/local/bin/aurora-system-info
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;Utility;
+Keywords=system;info;about;specs;aurora;
+StartupNotify=false
