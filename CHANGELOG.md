@@ -3,6 +3,18 @@
 All notable changes to AURORA OS are recorded here. Versions follow
 `MAJOR.MINOR.PATCH` with a `-dev` suffix for images that are not releases.
 
+## [Unreleased]
+
+### Added
+
+- New AURORA OS logo artwork (`distribution/branding/logo.png`, installed as
+  `/usr/share/aurora/login-logo.png` and referenced by the greeter).
+
+### Changed
+
+- Falkon removed from the package list (broken post-install against Qt 6);
+  Firefox remains the browser. Release kernel pin moved to `7.0.0-14-generic`.
+
 ## [0.5.0-dev] — 2026-11-06
 
 ### Added

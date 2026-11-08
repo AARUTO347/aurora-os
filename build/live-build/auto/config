@@ -14,7 +14,7 @@ lb config noauto \
 	--initramfs casper \
 	--initsystem systemd \
 	--linux-packages linux-image \
-	--linux-flavours 7.0.0-42-generic \
+	--linux-flavours 7.0.0-14-generic \
 	--archive-areas "main universe" \
 	--apt-recommends false \
 	--apt-indices false \

@@ -1,0 +1,19 @@
+#!/bin/sh
+# Install the official Mozilla Firefox used by /usr/local/bin/aurora-browser.
+# The tarball is pinned by version and SHA256 so clean builds are reproducible.
+set -eu
+
+VER=159.0.1
+SHA=469ce17120018e1c95411d254cf3c5f8db2dd1768a7acde5a2a089b00072ac65
+URL="https://archive.mozilla.org/pub/firefox/releases/$VER/linux-x86_64/en-US/firefox-$VER.tar.xz"
+TMP="/tmp/firefox-$VER.tar.xz"
+
+curl -L --fail -o "$TMP" "$URL"
+printf '%s  %s\n' "$SHA" "$TMP" | sha256sum -c -
+
+rm -rf /opt/firefox
+tar -xJf "$TMP" -C /opt
+ln -sf /opt/firefox/firefox /usr/bin/firefox
+rm -f "$TMP"
+
+/opt/firefox/firefox --version | head -n 1

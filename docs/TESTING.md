@@ -285,13 +285,20 @@ marker). Diagnostics proves the GTK3/PyGObject path renders text correctly.
 
 ---
 
-## Phase M - Release profile build (NOT TESTED)
+## Phase M - Release profile build (BLOCKED, 2026-11-08)
 
 `scripts/build-release-iso.sh` builds a profile without the test-only serial root autologin and
-evidence service, and verifies their absence in the squashfs. The script exists and is wired into
-the documentation, but no release ISO has been built or booted yet: a full live-build run takes
-longer than the current test window, and the release image must still be booted once to prove the
-login path without the serial shell.
+evidence service, and verifies their absence in the squashfs.
+
+Result: **BLOCKED**. Two clean-build attempts failed:
+
+1. Falkon's post-install script requires `/usr/share/qt5` (missing on Qt 6); Falkon was removed
+   from the package list because Firefox is the browser now.
+2. After that, the pinned kernel was unavailable: `linux-image-7.0.0-42-generic` no longer exists
+   in the archive (`7.0.0-14-generic` is the current candidate). The list and `auto/config` were
+   updated to `7.0.0-14-generic`, but the rebuild was interrupted before an ISO was produced.
+
+No release ISO exists and no release-profile boot has been executed (KI-034).
 
 
 ---

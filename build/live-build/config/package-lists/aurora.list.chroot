@@ -1,7 +1,7 @@
 # AURORA OS package list
 # Milestone 1 baseline (kernel, casper live system)
-linux-image-7.0.0-42-generic
-linux-modules-7.0.0-42-generic
+linux-image-7.0.0-14-generic
+linux-modules-7.0.0-14-generic
 initramfs-tools
 casper
 systemd-sysv
@@ -27,7 +27,6 @@ zenity
 
 # Milestone 3: internet browser (real debs, not the Ubuntu snap stubs)
 epiphany-browser
-falkon
 
 # Milestone 2: dark aurora look
 arc-theme

@@ -17,6 +17,7 @@ for f in \
 	/etc/lightdm/lightdm-gtk-greeter.conf.d/50-aurora.conf \
 	/usr/share/aurora/wallpaper.png \
 	/usr/share/aurora/login-logo.svg \
+	/usr/share/aurora/login-logo.png \
 	/usr/share/aurora/credits.txt \
 	/usr/local/bin/aurora-display-setup \
 	/usr/local/bin/aurora-session-setup \
