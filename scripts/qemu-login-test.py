@@ -38,14 +38,22 @@ qemu = subprocess.Popen([
     "-no-reboot",
 ])
 
-time.sleep(3)
-mon = socket.socket(socket.AF_UNIX)
-mon.connect(MON)
-mon.settimeout(0.2)
+def connect_retry(path, timeout=120):
+    end = time.time() + timeout
+    while time.time() < end:
+        s = socket.socket(socket.AF_UNIX)
+        try:
+            s.connect(path)
+            s.settimeout(0.2)
+            return s
+        except OSError:
+            s.close()
+            time.sleep(0.5)
+    raise SystemExit(f"could not connect to {path}")
 
-ser = socket.socket(socket.AF_UNIX)
-ser.connect(SER)
-ser.settimeout(0.2)
+
+mon = connect_retry(MON)
+ser = connect_retry(SER)
 serial_buf = bytearray()
 stop = threading.Event()
 
@@ -325,12 +333,12 @@ def as_ubuntu(command, timeout=35, background=False):
 
 def launch_browser(label="07-browser"):
     log("== browser ==")
-    log(as_ubuntu("epiphany --version 2>&1"))
+    log(as_ubuntu("/usr/local/bin/aurora-browser --version 2>&1"))
     as_ubuntu("setsid /usr/local/bin/aurora-browser about:blank >/home/ubuntu/aurora-browser.log 2>&1", 25, background=True)
     end = time.time() + 300
     running = False
     while time.time() < end:
-        out = ser_cmd("pgrep -u ubuntu -f -c falkon", 30).split()
+        out = ser_cmd("pgrep -u ubuntu -f -c firefox", 30).split()
         if out and out[-1].isdigit() and int(out[-1]) >= 1:
             running = True
             break

@@ -10,6 +10,7 @@ All notable changes to AURORA OS are recorded here. Versions follow
 - `polkitd` + `pkexec` so LightDM can update the AccountsService record without
   the "org.freedesktop.PolicyKit1 was not provided" warning.
 - `/var/lib/lightdm/data` created by the GUI hook (KI-026).
+- Official Mozilla Firefox 159.0.1 in `/opt/firefox` (software WebRender, bundled NSS) as the new `aurora-browser` target; Falkon and Epiphany remain installed.
 - SwiftShader/ANGLE flags for Falkon (`--enable-unsafe-swiftshader
   --use-angle=swiftshader --use-gl=angle`) to try to paint the web view without
   a GPU.

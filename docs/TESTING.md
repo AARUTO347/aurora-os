@@ -242,6 +242,26 @@ Run: `/home/aaruto/aurora-test/p11` (browser-only flow).
 | J-03 | Branded greeter + password login | PASS | greeter ready, `login attempt 1 detected=True` |
 | J-04 | Browser window renders a page | **FAIL** | Falkon starts (`browser running=True`) but no window is visible at capture; the SwiftShader/ANGLE flags did not fix the page surface under the software-only Xorg (KI-032) |
 
+
+---
+
+## Phase K - Firefox browser build (0.5.0-dev, 2026-11-07) - NOT TESTED
+
+The Falcon/WebKit/QtWebEngine attempts do not paint under the emulated adapter. The image was
+rebuilt with the official Mozilla Firefox tarball (`/opt/firefox`, version 159.0.1) and
+`aurora-browser` now sets `LD_LIBRARY_PATH=/opt/firefox`, `GDK_BACKEND=x11`, software GL, and the
+content sandbox disabled. Firefox can render with software WebRender, which is the most likely
+fix for a GPU-less VM.
+
+- ISO: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 1,049,690,112 bytes, SHA256
+  `d631d18b688f00bb75c1ed36add853d982237b724d5a812abb440a2e976dbf9e` (zstd squashfs).
+- Verification: **NOT TESTED**. The GPU-capable VM could not be provisioned: VMware has no
+  installable build here, and QEMU virgl/EGL has no DRM device in WSL (`/dev/dri` absent). The
+  QEMU boot that was started for this check was OOM-killed when a second VM was still running;
+  a repeat boot did not reach the greeter within the session window.
+- This ISO is saved at `D:\AURORAurora-os-0.5.0-firefox.iso`; it is **not** attached to a
+  release until a browser boot is observed.
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)
