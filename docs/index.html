@@ -1,276 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AURORA OS — a bootable Linux desktop with an aurora identity</title>
-<meta name="description" content="AURORA OS: a bootable Ubuntu 26.04 LTS live desktop with XFCE, a branded login page, Firefox, system utilities and session actions. MADE BY AARUTO.">
-<meta property="og:title" content="AURORA OS">
-<meta property="og:description" content="A bootable Linux desktop with an aurora identity. MADE BY AARUTO.">
-<meta property="og:image" content="assets/logo.png">
-<link rel="icon" href="assets/logo-256.png">
-<style>
-:root{
-  --bg:#080B14; --surface:#101729; --elev:#172238; --line:#243250;
-  --cyan:#45E6FF; --blue:#648BFF; --violet:#A879FF; --text:#F3F6FF; --dim:#9BA9C7;
-  --ok:#62E6AE; --warn:#FFD166; --bad:#FF647C;
-  --radius:16px; --max:1120px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0; background:var(--bg); color:var(--text);
-  font:16px/1.65 "Segoe UI",system-ui,-apple-system,"DejaVu Sans",sans-serif;
-  overflow-x:hidden;
-}
-body::before{
-  content:""; position:fixed; inset:-20% -10% auto -10%; height:120vh; z-index:-1;
-  background:
-    radial-gradient(60% 45% at 20% 10%, rgba(69,230,255,.22), transparent 60%),
-    radial-gradient(50% 40% at 80% 0%, rgba(168,121,255,.20), transparent 60%),
-    radial-gradient(70% 50% at 50% 30%, rgba(100,139,255,.12), transparent 65%);
-  filter:saturate(1.1);
-}
-a{color:var(--cyan); text-decoration:none}
-a:hover{text-decoration:underline}
-.wrap{max-width:var(--max); margin:0 auto; padding:0 22px}
-header.nav{
-  position:sticky; top:0; z-index:20; backdrop-filter:blur(10px);
-  background:rgba(8,11,20,.72); border-bottom:1px solid var(--line);
-}
-.nav .row{display:flex; align-items:center; gap:18px; height:64px}
-.nav img{height:34px; width:34px; object-fit:cover; border-radius:9px; border:1px solid var(--line)}
-.nav b{letter-spacing:.22em; font-size:13px; font-weight:600}
-.nav nav{margin-left:auto; display:flex; gap:18px; flex-wrap:wrap}
-.nav nav a{color:var(--dim); font-size:14px}
-.nav nav a:hover{color:var(--text); text-decoration:none}
-.hero{padding:74px 0 40px; text-align:center}
-.hero .logo{width:min(360px,72vw); border-radius:28px; box-shadow:0 30px 90px rgba(69,230,255,.15), 0 0 0 1px var(--line)}
-.hero h1{
-  margin:34px 0 8px; font-size:clamp(38px,7vw,72px); letter-spacing:.24em;
-  font-weight:300; text-transform:uppercase;
-  background:linear-gradient(92deg,var(--cyan),var(--blue) 45%,var(--violet));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-}
-.hero p.tag{color:var(--dim); letter-spacing:.32em; font-size:13px; text-transform:uppercase; margin:0}
-.cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:30px 0 10px}
-.btn{
-  display:inline-block; padding:13px 22px; border-radius:12px; font-weight:600;
-  border:1px solid var(--line); color:var(--text); background:var(--surface);
-}
-.btn.primary{
-  border:0; color:#04121a;
-  background:linear-gradient(92deg,var(--cyan),var(--violet));
-}
-.btn:hover{text-decoration:none; transform:translateY(-1px)}
-.meta{color:var(--dim); font-size:13px; margin-top:10px}
-section{padding:56px 0; border-top:1px solid var(--line)}
-h2{font-size:26px; letter-spacing:.06em; margin:0 0 8px}
-h2 .accent{color:var(--cyan)}
-p.lead{color:var(--dim); max-width:780px; margin:0 0 26px}
-.grid{display:grid; gap:16px}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g2{grid-template-columns:repeat(2,1fr)}
-@media(max-width:900px){.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
-.card{
-  background:linear-gradient(180deg,rgba(23,34,56,.9),rgba(16,23,41,.9));
-  border:1px solid var(--line); border-radius:var(--radius); padding:20px;
-}
-.card h3{margin:0 0 8px; font-size:16px; letter-spacing:.04em}
-.card p{margin:0; color:var(--dim); font-size:14px}
-.card .ico{font-size:20px; display:block; margin-bottom:10px; color:var(--cyan)}
-.shots{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
-@media(max-width:800px){.shots{grid-template-columns:1fr}}
-.shot{border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#000}
-.shot img{display:block; width:100%; height:auto}
-.shot figcaption{padding:10px 12px; font-size:13px; color:var(--dim); background:var(--surface)}
-table{width:100%; border-collapse:collapse; font-size:14px}
-th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line)}
-th{color:var(--dim); font-weight:600; font-size:12px; letter-spacing:.12em; text-transform:uppercase}
-code,kbd{font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace; font-size:13px}
-pre{
-  background:#0b1020; border:1px solid var(--line); border-radius:12px;
-  padding:16px; overflow:auto; font-size:13px; color:#cfe0ff;
-}
-.pill{display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; border:1px solid}
-.pill.pass{color:var(--ok); border-color:rgba(98,230,174,.45); background:rgba(98,230,174,.08)}
-.pill.part{color:var(--warn); border-color:rgba(255,209,102,.45); background:rgba(255,209,102,.08)}
-.pill.fail{color:var(--bad); border-color:rgba(255,100,124,.45); background:rgba(255,100,124,.08)}
-.pill.todo{color:var(--dim); border-color:var(--line); background:rgba(155,169,199,.06)}
-.note{border-left:3px solid var(--warn); padding:12px 16px; background:rgba(255,209,102,.06); color:#e8eefc; border-radius:8px; font-size:14px}
-footer{padding:40px 0 60px; color:var(--dim); font-size:13px; border-top:1px solid var(--line)}
-footer .row{display:flex; gap:16px; flex-wrap:wrap; align-items:center}
-footer .brand{color:var(--text); letter-spacing:.2em}
-.links a{margin-right:16px}
-.dl{display:flex; gap:16px; flex-wrap:wrap}
-.dl .card{flex:1 1 320px}
-.small{font-size:12px; color:var(--dim)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURORA OS - Bootable Linux Desktop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a1a; color: #e0e0e0; line-height: 1.6; }
+        .hero { background: linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a2e 100%); padding: 80px 20px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 30% 50%, rgba(0,200,150,0.1) 0%, transparent 50%), radial-gradient(ellipse at 70% 50%, rgba(100,0,200,0.1) 0%, transparent 50%); }
+        .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+        .logo { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 3px solid rgba(0,200,150,0.3); }
+        .hero h1 { font-size: 3em; background: linear-gradient(90deg, #00c896, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .hero .tagline { font-size: 1.2em; color: #a0a0c0; margin-bottom: 30px; }
+        .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+        .badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 0.85em; }
+        .btn { display: inline-block; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 5px; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #00c896); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+        .section { margin-bottom: 60px; }
+        .section h2 { font-size: 2em; margin-bottom: 20px; color: #00c896; }
+        .section p { color: #b0b0c0; margin-bottom: 15px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; transition: transform 0.2s; }
+        .feature-card:hover { transform: translateY(-4px); border-color: rgba(0,200,150,0.3); }
+        .feature-card h3 { color: #00c896; margin-bottom: 10px; }
+        .milestones { width: 100%; border-collapse: collapse; }
+        .milestones th, .milestones td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .milestones th { background: rgba(255,255,255,0.05); color: #00c896; }
+        .status-pass { color: #00c896; font-weight: 600; }
+        .status-progress { color: #f0a030; font-weight: 600; }
+        .status-pending { color: #808090; }
+        .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .screenshots img { width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .code-block { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.9em; margin: 15px 0; }
+        .creds-table { width: 100%; border-collapse: collapse; }
+        .creds-table td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .creds-table td:first-child { color: #00c896; font-weight: 600; }
+        footer { text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #808090; }
+        footer a { color: #00c896; text-decoration: none; }
+        @media (max-width: 600px) { .hero h1 { font-size: 2em; } .screenshots { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-
-<header class="nav">
-  <div class="wrap row">
-    <img src="assets/logo-256.png" alt="AURORA OS logo">
-    <b>AURORA&nbsp;OS</b>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#features">Features</a>
-      <a href="#screens">Screenshots</a>
-      <a href="#status">Status</a>
-      <a href="#download">Download</a>
-      <a href="#run">Run</a>
-      <a href="#docs">Docs</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="hero wrap" style="border-top:0">
-    <img class="logo" src="assets/logo.png" alt="AURORA OS">
-    <h1>Aurora&nbsp;OS</h1>
-    <p class="tag">Freedom powers brighter days</p>
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev">Download 0.5.0-dev</a>
-      <a class="btn" href="https://github.com/AARUTO347/aurora-os">Source on GitHub</a>
-      <a class="btn" href="https://github.com/AARUTO347/aurora-os/blob/main/docs/TESTING.md">Test register</a>
+    <div class="hero">
+        <div class="hero-content">
+            <img src="assets/logo.png" alt="AURORA OS" class="logo">
+            <h1>AURORA OS</h1>
+            <p class="tagline">A bootable Ubuntu 26.04 LTS live desktop with XFCE, branded LightDM login, and AURORA identity</p>
+            <div class="badges">
+                <span class="badge">v0.3.0-dev</span>
+                <span class="badge">Ubuntu 26.04 LTS</span>
+                <span class="badge">XFCE 4.20</span>
+                <span class="badge">MIT License</span>
+            </div>
+            <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev" class="btn btn-primary">Download ISO</a>
+            <a href="https://github.com/AARUTO347/aurora-os" class="btn btn-secondary">View on GitHub</a>
+        </div>
     </div>
-    <div class="meta">Ubuntu 26.04 LTS base · XFCE 4.20 · BIOS live ISO · MADE BY AARUTO</div>
-  </section>
 
-  <section id="about" class="wrap">
-    <h2>About <span class="accent">AURORA OS</span></h2>
-    <p class="lead">
-      A bootable Linux desktop built on Ubuntu 26.04 LTS with an aurora-inspired dark identity,
-      a branded login page, a real browser, system utilities and working session actions.
-      It runs live from a USB stick or a virtual machine — nothing is installed to a disk.
-    </p>
-    <div class="grid g3">
-      <div class="card"><span class="ico">◈</span><h3>Branded from boot to desktop</h3>
-        <p>GRUB, greeter, wallpaper, panel, identity files and credits agree on one identity: AURORA OS, MADE BY AARUTO.</p></div>
-      <div class="card"><span class="ico">◐</span><h3>Real login, real session</h3>
-        <p>LightDM greeter with password login, logout back to the greeter, and Switch User through LightDM's <code>dm-tool</code>.</p></div>
-      <div class="card"><span class="ico">▣</span><h3>Honest engineering</h3>
-        <p>Every feature is tested and labelled PASS, PARTIAL or NOT TESTED. Known limitations are documented instead of hidden.</p></div>
+    <div class="container">
+        <div class="section">
+            <h2>About</h2>
+            <p>AURORA OS is a custom bootable Linux desktop built on <strong>Ubuntu 26.04 LTS</strong> with an aurora-inspired dark visual identity, a branded login screen, and an XFCE session designed to run directly from the ISO — no installation required.</p>
+            <p><strong>Made by <a href="https://github.com/AARUTO347" style="color:#00c896">AARUTO</a> (Abhishek Solanki)</strong> — Credits: DP-_-, DEV</p>
+        </div>
+
+        <div class="section">
+            <h2>Milestone Status</h2>
+            <table class="milestones">
+                <tr><th>Milestone</th><th>Description</th><th>Status</th></tr>
+                <tr><td>0</td><td>Audit</td><td class="status-pass">PASS</td></tr>
+                <tr><td>1</td><td>Bootable base ISO</td><td class="status-pass">PASS</td></tr>
+                <tr><td>2</td><td>AURORA identity + GUI login</td><td class="status-pass">PASS</td></tr>
+                <tr><td>3</td><td>Functional desktop</td><td class="status-progress">In Progress</td></tr>
+                <tr><td>4</td><td>System utilities</td><td class="status-pending">Not Started</td></tr>
+                <tr><td>5</td><td>Release candidate</td><td class="status-pending">Not Started</td></tr>
+                <tr><td>6</td><td>Optional AI / kernel work</td><td class="status-pending">Not Started</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Ubuntu 26.04 LTS</h3>
+                    <p>Built on the latest Ubuntu LTS with kernel 7.0.0-42-generic for stability and performance.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>XFCE 4.20 Desktop</h3>
+                    <p>Lightweight yet powerful desktop environment on Xorg with Arc-Dark theme.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Branded LightDM</h3>
+                    <p>Custom AURORA greeter with aurora-inspired visuals and seamless session management.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Live Session</h3>
+                    <p>Runs entirely from ISO — no installation needed. Try before you commit.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Session Management</h3>
+                    <p>Full logout, switch user, and lock screen support with background session persistence.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>BIOS Compatible</h3>
+                    <p>Works in QEMU, VMware, and on real hardware with BIOS firmware.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Screenshots</h2>
+            <div class="screenshots">
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">Login Screen</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/greeter.png" alt="AURORA Login">
+                </div>
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">Desktop</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/desktop.png" alt="AURORA Desktop">
+                </div>
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">After Logout</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/after-logout.png" alt="AURORA Logout">
+                </div>
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">Switch User</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/switch-user.png" alt="AURORA Switch User">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Quick Start</h2>
+            <h3 style="color:#e0e0e0;margin:20px 0 10px">Login Credentials</h3>
+            <table class="creds-table">
+                <tr><td>User</td><td><code>ubuntu</code></td></tr>
+                <tr><td>Password</td><td><code>aurora</code></td></tr>
+                <tr><td>Session</td><td>XFCE</td></tr>
+            </table>
+            <h3 style="color:#e0e0e0;margin:20px 0 10px">Run in QEMU</h3>
+            <div class="code-block">qemu-system-x86_64 -machine q35 -accel tcg -m 2048 -smp 2 \
+  -cdrom aurora-os-0.3.0-dev-amd64.iso -boot d -vga std \
+  -display gtk,zoom-to-fit=on -vnc 127.0.0.1:1</div>
+        </div>
+
+        <div class="section">
+            <h2>Download</h2>
+            <div class="feature-card" style="max-width:500px">
+                <h3>v0.3.0-dev</h3>
+                <p>693 MB | BIOS-only live image | SHA256: <code style="font-size:0.8em">ebc54345bbf131c0d63e8c84e2821ae17347f7b18479f68ea103c9aee135af90</code></p>
+                <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev" class="btn btn-primary" style="margin-top:15px">Download from GitHub</a>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <section id="features" class="wrap">
-    <h2>Features</h2>
-    <p class="lead">Everything below is in the 0.5.0-dev image and verified in QEMU unless marked otherwise.</p>
-    <div class="grid g3">
-      <div class="card"><span class="ico">◉</span><h3>AURORA Browser</h3><p>Mozilla Firefox 159.0.1 with software WebRender, bundled at <code>/opt/firefox</code>. Renders without a GPU; verified in the VM.</p></div>
-      <div class="card"><span class="ico">⌘</span><h3>System Info</h3><p>Kernel, CPU, memory, storage, session and failed units read from the running system.</p></div>
-      <div class="card"><span class="ico">⚠</span><h3>Diagnostics</h3><p>Failed systemd units, boot errors with credential redaction, disk/memory/network status.</p></div>
-      <div class="card"><span class="ico">⇥</span><h3>Session actions</h3><p>Log Out, Switch User and Lock Screen through <code>aurora-session-action</code>, safe outside a session bus.</p></div>
-      <div class="card"><span class="ico">✶</span><h3>AURORA identity</h3><p>Hostname, greeter, panel name <code>AARUTO</code>, <code>/etc/aurora-release</code>, credits and artwork.</p></div>
-      <div class="card"><span class="ico">⚡</span><h3>Fast boot &amp; instant demo</h3><p>Offline-only units masked, 30 s systemd timeouts, KVM boot in ~90 s and a QEMU snapshot launcher.</p></div>
-      <div class="card"><span class="ico">◫</span><h3>Desktop</h3><p>XFCE 4.20 on Xorg, Arc-Dark, elementary-xfce icons, wallpaper, dock and AURORA desktop icons.</p></div>
-      <div class="card"><span class="ico">◌</span><h3>Reproducible tooling</h3><p>live-build config, pinned Firefox download hook, verification scripts and a release-profile gate.</p></div>
-      <div class="card"><span class="ico">✓</span><h3>Documented</h3><p>Architecture, build, testing, known issues, roadmap, security and credits in the repository.</p></div>
-    </div>
-  </section>
-
-  <section id="screens" class="wrap">
-    <h2>Screenshots</h2>
-    <p class="lead">Captured from the 0.5.0-dev ISO with QEMU <code>screendump</code>.</p>
-    <div class="shots">
-      <figure class="shot"><img src="screenshots/greeter.png" alt="AURORA login page"><figcaption>Branded LightDM login page with the AARUTO account</figcaption></figure>
-      <figure class="shot"><img src="screenshots/desktop.png" alt="AURORA desktop"><figcaption>XFCE desktop: panel, dock and AURORA action icons</figcaption></figure>
-      <figure class="shot"><img src="screenshots/browser.png" alt="Firefox rendering"><figcaption>AURORA Browser (Firefox) rendering its window</figcaption></figure>
-      <figure class="shot"><img src="screenshots/diagnostics.png" alt="AURORA Diagnostics"><figcaption>Diagnostics reading the running system</figcaption></figure>
-      <figure class="shot"><img src="screenshots/after-logout.png" alt="Greeter after logout"><figcaption>Logout returns to the greeter</figcaption></figure>
-      <figure class="shot"><img src="screenshots/switch-user.png" alt="Switch user"><figcaption>Switch User keeps the background session alive</figcaption></figure>
-    </div>
-  </section>
-
-  <section id="status" class="wrap">
-    <h2>Project status</h2>
-    <p class="lead">Milestones follow the repository roadmap. Only executed tests receive a PASS.</p>
-    <table>
-      <thead><tr><th>Milestone</th><th>Scope</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>M1</td><td>Bootable base ISO</td><td><span class="pill pass">Pass</span></td></tr>
-        <tr><td>M2</td><td>Identity and graphical login</td><td><span class="pill pass">Pass</span></td></tr>
-        <tr><td>M3</td><td>Functional desktop</td><td><span class="pill part">Partial</span></td></tr>
-        <tr><td>M4</td><td>System utilities</td><td><span class="pill part">In progress</span></td></tr>
-        <tr><td>M5</td><td>Release candidate</td><td><span class="pill fail">Blocked</span></td></tr>
-        <tr><td>M6</td><td>Optional advanced work</td><td><span class="pill todo">Not started</span></td></tr>
-        <tr><td>M7</td><td>Installer, UEFI, USB, persistence</td><td><span class="pill todo">Not started</span></td></tr>
-        <tr><td>M8</td><td>AURORA applications and optional AI</td><td><span class="pill part">In progress</span></td></tr>
-      </tbody>
-    </table>
-    <p class="small" style="margin-top:14px">
-      Known limits: BIOS-only image, no installer, test-only root serial console in the test profile,
-      and the release build is currently blocked by archive kernel drift (see
-      <a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/KNOWN_ISSUES.md">Known Issues</a>).
-    </p>
-  </section>
-
-  <section id="download" class="wrap">
-    <h2>Download</h2>
-    <p class="lead">Live ISO — boot it from a virtual machine or write it to optical media.</p>
-    <div class="dl">
-      <div class="card">
-        <h3>v0.5.0-dev</h3>
-        <p>1,050,607,616 bytes · SHA256<br>
-          <code>29691f1d321bc4c6806f673004d7836a7e1a407e01a5a267a99fc7b17dc1e756</code></p>
-        <p style="margin-top:12px"><a class="btn primary" href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev">ISO and checksum</a></p>
-      </div>
-      <div class="card">
-        <h3>What changed</h3>
-        <p>Working Firefox browser, System Info and Diagnostics apps, real greeter login, logout and
-          Switch User, polkit and LightDM fixes, boot-time tuning and the instant VM launcher.</p>
-        <p style="margin-top:12px"><a href="https://github.com/AARUTO347/aurora-os/blob/main/CHANGELOG.md">Full changelog</a></p>
-      </div>
-    </div>
-    <div class="note" style="margin-top:18px">
-      The current release ISO predates the new logo artwork and the blocked release-profile rebuild.
-      The repository already contains both; the next image will ship them.
-    </div>
-  </section>
-
-  <section id="run" class="wrap">
-    <h2>Run it</h2>
-    <p class="lead">QEMU with KVM is the fastest path; the image is BIOS-only.</p>
-<pre><code>qemu-system-x86_64 -machine q35 -accel kvm -m 3072 -smp 4 \
-  -cdrom aurora-os-0.5.0-dev-amd64.iso -boot d -vga std \
-  -display gtk -nic none</code></pre>
-    <p class="small">
-      Login: user <code>ubuntu</code>, password <code>aurora</code> (the greeter shows <code>AARUTO</code>).
-      A VMware VMX bundle is in <a href="https://github.com/AARUTO347/aurora-os/tree/main/distribution/vmware">distribution/vmware</a>;
-      VMware requires BIOS firmware and 4 GB RAM.
-    </p>
-  </section>
-
-  <section id="docs" class="wrap">
-    <h2>Documentation</h2>
-    <div class="grid g3">
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/ARCHITECTURE.md">Architecture</a></h3><p>Boot chain, components and decisions.</p></div>
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/BUILD_AND_RUN.md">Build and run</a></h3><p>Toolchain, live-build, test harness, release profile.</p></div>
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/TESTING.md">Testing</a></h3><p>Every executed test, PASS or FAIL, with evidence.</p></div>
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/KNOWN_ISSUES.md">Known issues</a></h3><p>Open limitations with workarounds.</p></div>
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/ROADMAP.md">Roadmap</a></h3><p>Milestones 1–8 and the next-actions plan.</p></div>
-      <div class="card"><h3><a href="https://github.com/AARUTO347/aurora-os/blob/main/docs/CREDITS.md">Credits</a></h3><p>AARUTO, DP-_-, DEV. MADE BY AARUTO.</p></div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap row">
-    <span class="brand">MADE BY AARUTO</span>
-    <span>Credits: AARUTO (Abhishek Solanki) · DP-_-, DEV</span>
-    <span class="links" style="margin-left:auto">
-      <a href="https://github.com/AARUTO347/aurora-os">GitHub</a>
-      <a href="https://github.com/AARUTO347/aurora-os/releases">Releases</a>
-      <a href="https://github.com/AARUTO347/aurora-os/blob/main/LICENSE">MIT license</a>
-    </span>
-  </div>
-  <div class="wrap small" style="margin-top:10px">
-    Ubuntu packages keep their upstream licenses. QEMU measurements are kept separate from any
-    physical-hardware results.
-  </div>
-</footer>
-
+    <footer>
+        <p><strong>AURORA OS</strong> — Made with care by <a href="https://github.com/AARUTO347">AARUTO</a></p>
+        <p style="margin-top:10px"><a href="https://github.com/AARUTO347/aurora-os">GitHub</a> | <a href="https://github.com/AARUTO347/aurora-os/releases">Releases</a> | <a href="https://github.com/AARUTO347/aurora-os/issues">Issues</a></p>
+        <p style="margin-top:10px">MIT License</p>
+    </footer>
 </body>
 </html>
