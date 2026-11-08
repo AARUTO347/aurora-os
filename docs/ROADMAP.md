@@ -305,7 +305,7 @@ installs or explicitly documents that it is live-only.
 
 ---
 
-## Milestone 8 - AURORA applications and optional AI (NOT STARTED)
+## Milestone 8 - AURORA applications and optional AI (IN PROGRESS)
 
 - AURORA applications: system info, diagnostics, settings hub, app launcher.
 - Optional AI assistant: opt-in, no automatic command execution, credentials
@@ -318,8 +318,8 @@ strictly optional and never blocks boot or login.
 
 ### Result (0.5.0-dev, 2026-11-07)
 
-- ISO: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 896,991,232 bytes, SHA256
-  `7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c`.
+- ISO: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 1,050,607,616 bytes, SHA256
+  `29691f1d321bc4c6806f673004d7836a7e1a407e01a5a267a99fc7b17dc1e756`.
 - Milestone 4 groundwork: `polkitd` + `pkexec` (no more AccountsService permission warning),
   `/var/lib/lightdm/data` created (KI-026 closed).
 - Browser: Mozilla Firefox 159.0.1 with software WebRender renders fully under QEMU TCG
@@ -328,31 +328,62 @@ strictly optional and never blocks boot or login.
 - AURORA apps (Milestone 4/M8 groundwork): System Info, Diagnostics, Settings and Applications
   launchers; Diagnostics verified against the running system.
 
-## Immediate next actions
+## Plan for Milestones 5-8
 
-Priority order after the 0.4.0-dev result (2026-11-06):
+Guiding constraints: one 3 GB QEMU at a time (concurrent VMs caused OOM kills), TCG boot to the
+greeter costs 25-40 minutes, KVM is still blocked for `aaruto` (KI-003), and every claim needs a
+screenshot or transcript. Estimates are working sessions, not promises.
 
-1. **Browser rendering (KI-032, blocks I-05).** Falkon opens a window but the web view is not
-   painted under the software-only Xorg, and Epiphany/WebKit aborts. Next: reproduce on a
-   GPU-capable VM (VMware) or real hardware. If it is the emulated adapter, document the browser
-   as requiring a GPU; if it fails everywhere, try `--use-gl=swiftshader`, `--in-process-gpu` and
-   a QtWebEngine software-rasterizer build before considering a different engine.
-2. **KVM for the test host (KI-003).** Adding `aaruto` to the `kvm` group (with explicit
-   authorization, then a WSL restart) removes the snapshot workaround and makes every boot fast.
-3. **Release/test profile split (KI-018).** Remove the test-only serial root autologin and the
-   evidence service from the release image; keep them behind an `AURORA_TEST_HOOKS=1` switch.
-   Also add `policykit-1` (LightDM AccountsService warning) and create `/var/lib/lightdm/data`
-   (KI-026).
-4. **Reproducibility.** The 0.4.0 image was assembled from the chroot (pack + remaster) after
-   live-build's binary stage dropped files. Fix the build pipeline so `scripts/build-iso.sh`
-   alone produces the same tree, then run a clean build and a second boot (G-00 equivalent).
-5. **UEFI and USB (KI-015, KI-016).** Decide whether UEFI boot is required and add an
-   `iso-hybrid` mastering path for USB sticks.
-6. **Milestone 3 desktop work.** Deliberate panel/dock/workspace layout, Thunar operations,
-   settings entry points, session recovery, restart/shutdown from the menu (NOT TESTED).
-7. **Milestone 2 visuals.** Plymouth theme or a documented GRUB-only fallback; fresh GRUB menu
-   capture; finish `distribution/branding/` (1920x1080 wallpaper, palette, licensed font).
-8. **CI.** A workflow-scoped token is needed before `.github/workflows-disabled/` can be enabled.
+### M5 - Release candidate (next milestone)
+
+| Step | Work | Acceptance | Est. |
+|---|---|---|---|
+| 5.1 | Run `scripts/build-release-iso.sh` (release profile, no serial/evidence hooks) | build exits 0, gate reports both markers absent | 1 session |
+| 5.2 | Add a release test mode to `qemu-login-test.py`: drive the greeter with monitor `sendkey` only, no serial shell; detect state by screendump pixels | release ISO boots to greeter, password login works, no serial shell exists | 1-2 sessions |
+| 5.3 | Version the artifact: `VERSION`, ISO name, `SHA256SUMS` file, release notes, recovery/known-limitations doc | files present; `sha256sum -c` passes | 0.5 session |
+| 5.4 | Clean rebuild twice with `scripts/build-iso.sh` after the lb-binary pipeline fix; record both logs | both images boot; structural comparison documented (no bit-identical claim) | 2 sessions |
+| 5.5 | CI: enable `.github/workflows-disabled/` with a workflow-scoped token; static checks only | workflow runs `make check` | needs user token |
+
+Exit: release-profile ISO boots to the login page, no test hooks, checksums and docs published.
+
+### M6 - Optional advanced work (deferred unless requested)
+
+- Fallback kernel track: pin a second `linux-image` and add a GRUB entry; verify boot with both.
+- AI assistant: design first (see M8); no implementation before M8.2 is specified.
+- Accessibility pass: focus rings, keyboard-only navigation, contrast check in the existing apps.
+
+Exit: each item is independent, optional at boot, and has its own test evidence.
+
+### M7 - Installer, UEFI, USB, persistence
+
+| Step | Work | Risk / note | Est. |
+|---|---|---|---|
+| 7.1 | UEFI boot: build `efi.img` with `grub-mkstandalone`, add an El Torito EFI entry with xorriso (`-eltorito-alt-boot`), test under OVMF | ISO stays BIOS-bootable; Secure Boot remains out of scope | 2 sessions |
+| 7.2 | USB-hybrid: add an MBR/GPT hybrid layout in the remaster step and verify with `qemu -drive file=usb.img` | current GRUB El Torito cannot use `isohybrid`; needs a manual hybrid MBR | 2 sessions |
+| 7.3 | Installer: `aurora-install` script (list disks, explicit target confirmation, rsync squashfs, chroot grub-install, user setup); VM-only by default | must refuse ambiguous/removable targets; never touch the Windows disk | 3 sessions |
+| 7.4 | Persistence: casper `persistence` partition or `casper-rw` file creator and docs | optional; never automatic | 1 session |
+
+Exit: same image boots BIOS+UEFI, writes to USB, and either installs to an explicitly chosen VM
+disk or documents live-only behavior.
+
+### M8 - AURORA applications and optional AI
+
+| Step | Work | Acceptance | Est. |
+|---|---|---|---|
+| 8.1 | Finish the app set: package/update view (`dpkg`/`apt` state), network status (NetworkManager or honest "no device"), audio status (PipeWire/ALSA presence), About with version | each reads real data; missing hardware reported honestly | 2 sessions |
+| 8.2 | Settings hub: one window linking only implemented settings (display, keyboard, users, power) | every entry opens a working tool | 1 session |
+| 8.3 | AI assistant (opt-in): separate launcher disabled by default, local endpoint (Ollama) or user-supplied API key stored outside the repo, no automatic command execution | absent/unconfigured = no impact on boot; explicit consent before any data leaves the machine | 2-3 sessions |
+
+Exit: every app reads the running system; the assistant is strictly optional and consent-gated.
+
+### Cross-cutting next actions (do first)
+
+1. **KVM authorization (KI-003).** Add `aaruto` to `kvm`, restart WSL once, switch tests to KVM.
+   This cuts a 30-minute boot to seconds and unblocks every remaining milestone.
+2. **Release test mode (5.2).** Needed before M5 can be called done.
+3. **Workflow-scoped GitHub token (5.5).** Required to enable CI.
+4. **Pipeline fix (5.4).** Make `build-iso.sh` alone produce the image (today the chroot is packed
+   manually after live-build drops runtime files).
 
 ## Metrics to record per build
 
