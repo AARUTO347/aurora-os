@@ -33,7 +33,7 @@ def collect():
     lines.append(sh("uname -a"))
     lines.append("")
     lines.append("== Build ==")
-    lines.append("Kernel package: " + sh("dpkg-query -W -f='${Version}' linux-image-7.0.0-42-generic 2>/dev/null"))
+    lines.append("Kernel package: " + sh("dpkg-query -W -f='${Version}' linux-image-$(uname -r) 2>/dev/null"))
     lines.append("")
     lines.append("== CPU ==")
     for ln in sh("lscpu").splitlines():

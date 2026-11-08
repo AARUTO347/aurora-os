@@ -295,8 +295,12 @@ Result: **BLOCKED**. Two clean-build attempts failed:
 1. Falkon's post-install script requires `/usr/share/qt5` (missing on Qt 6); Falkon was removed
    from the package list because Firefox is the browser now.
 2. After that, the pinned kernel was unavailable: `linux-image-7.0.0-42-generic` no longer exists
-   in the archive (`7.0.0-14-generic` is the current candidate). The list and `auto/config` were
-   updated to `7.0.0-14-generic`, but the rebuild was interrupted before an ISO was produced.
+   in the archive (`7.0.0-14-generic` is the current candidate). The package list and both
+   `auto/config` files were moved to `7.0.0-14-generic`.
+3. Two further attempts reached the chroot package-install/cleanup stage but the WSL session was
+   torn down mid-build (no error in the log; it ends during `apt` cache cleanup), so no ISO was
+   produced. A full build takes 15-25 minutes and needs a persistent terminal (`tmux`/`screen`)
+   outside the agent session.
 
 No release ISO exists and no release-profile boot has been executed (KI-034).
 
