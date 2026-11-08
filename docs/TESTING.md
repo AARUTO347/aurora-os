@@ -293,6 +293,25 @@ the documentation, but no release ISO has been built or booted yet: a full live-
 longer than the current test window, and the release image must still be booted once to prove the
 login path without the serial shell.
 
+
+---
+
+## Phase N - KVM acceleration (2026-11-08)
+
+`aaruto` was added to the `kvm` group and WSL restarted with explicit user authorization.
+`/dev/kvm` is `crw-rw---- root:kvm` and writable by the user. Runs `/home/aaruto/aurora-test/p16`
+(full flow) and `p17` (fast browser pass) used `-accel kvm`.
+
+| ID | Test | Result | Evidence |
+|---|---|---|---|
+| N-01 | KVM is usable as `aaruto` | PASS | `id` → `991(kvm)`, `/dev/kvm` writable |
+| N-02 | Boot to greeter under KVM | PASS | about 90 seconds from ISO start to the greeter (TCG: 25-40 minutes) |
+| N-03 | Full login + apps + browser flow under KVM | PASS | p16 reached the browser step within the test window; `03-system-info.png` renders the full text (distribution, kernel, CPU, memory, storage, session) |
+| N-04 | Firefox renders a real page under KVM | PASS | p17 `05-browser.png`: Mozilla Firefox welcome page with the full UI |
+
+Note: the "security sandbox is disabled" banner is expected; the live wrapper disables the content
+sandbox (no user namespaces/AppArmor profile in the image).
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)

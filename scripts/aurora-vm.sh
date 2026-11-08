@@ -1,17 +1,22 @@
 #!/bin/sh
 # Fast AURORA launcher.
 #
-# The first run boots the ISO once and saves a QEMU snapshot to a qcow2 disk;
-# every later run resumes the saved login page in seconds with -loadvm.
+# Preferred: KVM boot (about 90 s to the greeter). Fallback: resume a QEMU
+# snapshot saved on a small qcow2 disk (seconds), rebuilding it once if needed.
 set -u
 
-ISO=${AURORA_ISO:-/home/aaruto/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso}
+ISO=${AURORA_ISO:-/home/aaruto/aurora-build/artifacts/aurora-os-0.5.0-dev-amd64.iso}
 DISK=${AURORA_STATE:-/home/aaruto/aurora-build/aurora-state.qcow2}
 SNAP=${AURORA_SNAPSHOT:-ready}
 
 if [ ! -f "$ISO" ]; then
 	echo "AURORA ISO not found: $ISO" >&2
 	exit 1
+fi
+
+if [ -r /dev/kvm ] && [ -w /dev/kvm ]; then
+	exec qemu-system-x86_64 -machine q35 -accel kvm -m 3072 -smp 4 \
+		-cdrom "$ISO" -boot d -vga std -display "gtk,zoom-to-fit=on" -nic none
 fi
 
 if [ ! -f "$DISK" ]; then

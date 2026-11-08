@@ -31,7 +31,7 @@ Severity: Low / Medium / High. Status: Open / Mitigated / Resolved / Information
 
 | ID | Issue | Severity | Status | Details and workaround |
 |---|---|---|---|---|
-| KI-003 | `aaruto` cannot open `/dev/kvm` | Medium | Open | Device is `root:kvm 0660`; the user is not in the `kvm` group. QEMU uses TCG (slow). The group change and WSL restart still require explicit authorization; no change was made. |
+| KI-003 | `aaruto` could not open `/dev/kvm` | Medium | Resolved 2026-11-08 | With explicit authorization, `aaruto` was added to the `kvm` group and WSL restarted. `id` shows `991(kvm)` and `/dev/kvm` is writable by the user. KVM boots the ISO to the greeter in about 90 seconds (TCG: 25-40 minutes); TCG remains the fallback. |
 | KI-004 | ISO toolchain missing | High | Resolved 2026-10-28 | `live-build`, `debootstrap`, `xorriso`, `grub-pc-bin`, GRUB modules, `mtools`, `dosfstools`, `cpio` installed after authorization and version checks. |
 | KI-011 | `live-build` 3.0~a57 vs Ubuntu 26.04 | Medium | Mitigated | The fork's syslinux+casper path is unusable (theme packages and `/casper` layout mismatch). Verified path is GRUB2-only with two workarounds: a `grub-mkimage -p /boot/grub` wrapper (GRUB 2.14 requires a prefix) and copying modules into `binary/boot/grub/i386-pc/` (GRUB 2.14 module layout). Both are committed in `build/live-build/`. |
 | KI-022 | WSL distro terminated mid-build | Medium | Mitigated by procedure | A build started as a child of an interactive tool session was killed when the launcher timed out; WSL then tore down the session (`DBG_TERMINATE_PROCESS`). Long builds/tests now run detached (`setsid nohup ... &`) and are polled. |

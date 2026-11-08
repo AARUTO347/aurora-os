@@ -19,6 +19,8 @@ import zlib
 
 ISO = sys.argv[1]
 OUT = sys.argv[2]
+FAST = bool(os.environ.get("AURORA_FAST"))
+SKIP_APPS = bool(os.environ.get("AURORA_SKIP_APPS"))
 os.makedirs(OUT, exist_ok=True)
 MON = os.path.join(OUT, "mon.sock")
 SER = os.path.join(OUT, "ser.sock")
@@ -30,7 +32,8 @@ for p in (MON, SER):
 
 qemu = subprocess.Popen([
     "qemu-system-x86_64",
-    "-machine", "q35", "-accel", "tcg", "-m", "3072", "-smp", "4",
+    "-machine", "q35", "-accel", os.environ.get("AURORA_ACCEL", "tcg"),
+    "-m", os.environ.get("AURORA_MEM", "3072"), "-smp", os.environ.get("AURORA_SMP", "4"),
     "-cdrom", ISO, "-boot", "d", "-vga", "std", "-display", "none",
     "-nic", "none",
     "-monitor", f"unix:{MON},server=on,wait=off",
@@ -307,7 +310,7 @@ def login(label, timeout=300):
         wait_panel()
         # The panel process starts before its window is mapped; under TCG the
         # panel and dock can take minutes to finish drawing.
-        time.sleep(120)
+        time.sleep(20 if FAST else 120)
         log(str(shot_when_drawn(label + "-desktop", 240)))
     return ok
 
@@ -351,7 +354,7 @@ def launch_browser(label="05-browser"):
         time.sleep(10)
     log(f"{label}: browser running={running}")
     log(as_ubuntu("tail -n 20 /home/ubuntu/aurora-browser.log 2>&1", 30))
-    time.sleep(120)
+    time.sleep(40 if FAST else 120)
     mon_cmd("sendkey alt-tab", 1.0)
     time.sleep(15)
     log(str(shot_when_drawn(label, 180)))
@@ -435,12 +438,15 @@ if first:
                 "loginctl list-sessions --no-legend", 25))
     log("== DPMS ==")
     log(as_ubuntu("xset q | grep -i -A1 'DPMS\\|screen saver'"))
-    log("== system info app ==")
-    launch_app("/usr/local/bin/aurora-system-info", "03-system-info")
-    as_ubuntu("pkill -u ubuntu -f aurora-system-info")
-    log("== diagnostics app ==")
-    launch_app("/usr/local/bin/aurora-diagnostics", "04-diagnostics")
-    as_ubuntu("pkill -u ubuntu -f aurora-diagnostics")
+    if SKIP_APPS:
+        log("== apps skipped (AURORA_SKIP_APPS) ==")
+    else:
+        log("== system info app ==")
+        launch_app("/usr/local/bin/aurora-system-info", "03-system-info")
+        as_ubuntu("pkill -u ubuntu -f aurora-system-info")
+        log("== diagnostics app ==")
+        launch_app("/usr/local/bin/aurora-diagnostics", "04-diagnostics")
+        as_ubuntu("pkill -u ubuntu -f aurora-diagnostics")
     browser_ok = launch_browser("05-browser")
     log(f"browser ok={browser_ok}")
     log("== syslog session actions ==")

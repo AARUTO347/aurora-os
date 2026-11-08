@@ -378,8 +378,8 @@ Exit: every app reads the running system; the assistant is strictly optional and
 
 ### Cross-cutting next actions (do first)
 
-1. **KVM authorization (KI-003).** Add `aaruto` to `kvm`, restart WSL once, switch tests to KVM.
-   This cuts a 30-minute boot to seconds and unblocks every remaining milestone.
+1. **KVM authorization (KI-003).** DONE 2026-11-08: `aaruto` added to `kvm`, WSL restarted, tests run
+   with `-accel kvm` (about 90 s to the greeter).
 2. **Release test mode (5.2).** Needed before M5 can be called done.
 3. **Workflow-scoped GitHub token (5.5).** Required to enable CI.
 4. **Pipeline fix (5.4).** Make `build-iso.sh` alone produce the image (today the chroot is packed

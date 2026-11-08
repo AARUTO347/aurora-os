@@ -278,7 +278,9 @@ later runs resume it with `-loadvm ready` in seconds:
 ```
 
 Measured on this host: 22 s from launch to the greeter with a warm page cache,
-40 s cold, against 15-25 minutes for a full TCG boot. The state disk is
+40 s cold, against 15-25 minutes for a full TCG boot. Since 2026-11-08 the launcher
+prefers `-accel kvm` (about 90 s from ISO start) and only uses the snapshot when
+KVM is unavailable. The state disk is
 `/home/aaruto/aurora-build/aurora-state.qcow2` (1.2 GiB, saved with
 `savevm ready`).
 
