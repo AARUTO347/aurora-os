@@ -282,6 +282,17 @@ Image: `aurora-os-0.5.0-dev-amd64.iso`, 1,050,607,616 bytes, SHA256
 Note: the System Info text pane needs a longer paint wait under TCG; the app itself ran (log
 marker). Diagnostics proves the GTK3/PyGObject path renders text correctly.
 
+
+---
+
+## Phase M - Release profile build (NOT TESTED)
+
+`scripts/build-release-iso.sh` builds a profile without the test-only serial root autologin and
+evidence service, and verifies their absence in the squashfs. The script exists and is wired into
+the documentation, but no release ISO has been built or booted yet: a full live-build run takes
+longer than the current test window, and the release image must still be booted once to prove the
+login path without the serial shell.
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)

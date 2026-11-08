@@ -269,7 +269,7 @@ no fabricated temperatures, battery health, or GPU capabilities.
 
 ---
 
-## Milestone 5 - Release candidate (NOT STARTED)
+## Milestone 5 - Release candidate (TOOLING ADDED, ISO NOT BUILT)
 
 - Versioned ISO with version stamp.
 - Repeatable build from clean checkout.

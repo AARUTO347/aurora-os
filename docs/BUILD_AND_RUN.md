@@ -171,6 +171,17 @@ for the separate test-only root serial autologin.
 
 ---
 
+### 3.5 Release profile (tooling added, NOT TESTED)
+
+```sh
+sudo AURORA_BUILD_DIR="$HOME/aurora-build" sh scripts/build-release-iso.sh
+```
+
+The script builds in `work-release/`, removes the `0100-serial-autologin` and
+`0300-evidence-service` hooks, and fails if `aurora-serial-getty.service` or
+`aurora-evidence.sh` still appears in the squashfs. No release ISO has been
+built or booted yet (TESTING Phase M).
+
 ## 4. Verify an ISO (VERIFIED)
 
 ```bash
