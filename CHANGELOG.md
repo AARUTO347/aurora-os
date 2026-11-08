@@ -3,6 +3,21 @@
 All notable changes to AURORA OS are recorded here. Versions follow
 `MAJOR.MINOR.PATCH` with a `-dev` suffix for images that are not releases.
 
+## [0.5.0-dev] — 2026-11-06
+
+### Added
+
+- `polkitd` + `pkexec` so LightDM can update the AccountsService record without
+  the "org.freedesktop.PolicyKit1 was not provided" warning.
+- `/var/lib/lightdm/data` created by the GUI hook (KI-026).
+- SwiftShader/ANGLE flags for Falkon (`--enable-unsafe-swiftshader
+  --use-angle=swiftshader --use-gl=angle`) to try to paint the web view without
+  a GPU.
+
+### Changed
+
+- Identity bumped to `0.5.0-dev (Milestone 4)`.
+
 ## [0.4.0-dev] — 2026-11-06
 
 ### Added

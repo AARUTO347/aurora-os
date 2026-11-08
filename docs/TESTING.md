@@ -224,6 +224,24 @@ Caveats:
 - The image remains test-profile only: root serial autologin (KI-018), BIOS-only (KI-015), no
   installer, no Plymouth.
 
+
+---
+
+## Phase J - 0.5.0-dev polkit, LightDM data dir, browser retry (2026-11-07)
+
+Image: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 896,991,232 bytes, SHA256
+`7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c`; identity
+`AURORA OS 0.5.0-dev (Milestone 4)`; initrd `d203e1a3...`. QEMU TCG, 4 vCPU, 3072 MiB.
+
+Run: `/home/aaruto/aurora-test/p11` (browser-only flow).
+
+| ID | Test | Result | Evidence |
+|---|---|---|---|
+| J-01 | polkit present, LightDM AccountsService warning gone | PASS | `polkitd`/`pkexec` in the squashfs; zero `PolicyKit1` messages in the p11 serial log (previously logged twice per boot) |
+| J-02 | `/var/lib/lightdm/data` exists | PASS | created by `0400-gui.chroot`; the "Could not enumerate user data directory" warning is absent |
+| J-03 | Branded greeter + password login | PASS | greeter ready, `login attempt 1 detected=True` |
+| J-04 | Browser window renders a page | **FAIL** | Falkon starts (`browser running=True`) but no window is visible at capture; the SwiftShader/ANGLE flags did not fix the page surface under the software-only Xorg (KI-032) |
+
 ---
 
 ## Existing myOS tests (reference only, not AURORA)

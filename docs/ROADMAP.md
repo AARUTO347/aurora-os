@@ -293,6 +293,39 @@ never prevents normal OS use.
 
 ---
 
+## Milestone 7 - Installer, UEFI, USB and persistence (NOT STARTED)
+
+- Installer or a documented "live only" release decision.
+- UEFI boot (OVMF-verified) and Secure Boot compatibility notes.
+- `iso-hybrid` mastering for USB sticks.
+- Optional persistence partition or overlay.
+
+Acceptance: the same image boots under BIOS and UEFI, writes to USB, and either
+installs or explicitly documents that it is live-only.
+
+---
+
+## Milestone 8 - AURORA applications and optional AI (NOT STARTED)
+
+- AURORA applications: system info, diagnostics, settings hub, app launcher.
+- Optional AI assistant: opt-in, no automatic command execution, credentials
+  outside source control.
+
+Acceptance: every application reads real system data; the AI assistant is
+strictly optional and never blocks boot or login.
+
+---
+
+### Result (0.5.0-dev, 2026-11-07)
+
+- ISO: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 896,991,232 bytes, SHA256
+  `7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c`.
+- Milestone 4 groundwork: `polkitd` + `pkexec` (no more AccountsService permission warning),
+  `/var/lib/lightdm/data` created (KI-026 closed).
+- Browser: retried with `--enable-unsafe-swiftshader --use-angle=swiftshader --use-gl=angle`;
+  Falkon still does not paint a page under the emulated adapter (KI-032 open).
+- Identity `0.5.0-dev (Milestone 4)`.
+
 ## Immediate next actions
 
 Priority order after the 0.4.0-dev result (2026-11-06):

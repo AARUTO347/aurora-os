@@ -27,7 +27,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 ## Current Status
 
-**0.4.0-dev — login, desktop, browser, logout and switch-user verified** (Milestone 3 in progress)
+**0.5.0-dev — login, logout, switch-user and polkit verified; browser page rendering still failing under TCG** (Milestone 4 in progress)
 
 Next work is tracked in [docs/ROADMAP.md](docs/ROADMAP.md#immediate-next-actions): browser
 rendering under a GPU VM (KI-032), KVM for the test host (KI-003), and the release/test profile
@@ -60,7 +60,7 @@ split (KI-018).
 
 | Version | Size | SHA256 |
 |---------|------|--------|
-| [v0.4.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.4.0-dev) | 855 MB | `ad7317af165926d39b29443a1cda43cc061ecaefdc1d9310f2df748ca4178d44` |
+| [v0.5.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev) | 856 MB | `7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c` |
 
 > **Note:** BIOS-only live image. UEFI boot not yet supported (KI-015).
 
@@ -70,7 +70,7 @@ split (KI-018).
 
 ```bash
 qemu-system-x86_64 -machine q35 -accel tcg -m 2048 -smp 2 \
-  -cdrom aurora-os-0.4.0-dev-amd64.iso -boot d -vga std \
+  -cdrom aurora-os-0.5.0-dev-amd64.iso -boot d -vga std \
   -display gtk,zoom-to-fit=on -vnc 127.0.0.1:1 \
   -serial file:/tmp/aurora-serial.log -no-reboot
 ```
@@ -118,8 +118,8 @@ make boot         # QEMU TCG with loopback VNC on 127.0.0.1:5901
 ### Build Output
 
 ```
-$HOME/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso
-$HOME/aurora-build/artifacts/aurora-os-0.4.0-dev-amd64.iso.sha256
+$HOME/aurora-build/artifacts/aurora-os-0.5.0-dev-amd64.iso
+$HOME/aurora-build/artifacts/aurora-os-0.5.0-dev-amd64.iso.sha256
 ```
 
 Full build instructions: [docs/BUILD_AND_RUN.md](docs/BUILD_AND_RUN.md)

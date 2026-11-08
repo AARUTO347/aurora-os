@@ -59,6 +59,7 @@ chmod 0644 /etc/xdg/autostart/aurora-session.desktop \
 
 # The greeter is only usable if it can read the account list.
 systemctl enable accounts-daemon.service
+install -d -o lightdm -g lightdm -m 0755 /var/lib/lightdm/data
 
 # Fast boot for an offline live image: units that wait for a network or a
 # checksum file used to stall the boot for minutes before giving up.

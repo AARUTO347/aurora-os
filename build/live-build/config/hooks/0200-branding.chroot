@@ -2,8 +2,8 @@
 set -eu
 
 # Keep the release identity in one place so every file agrees.
-AURORA_VERSION="0.4.0-dev"
-AURORA_MILESTONE="Milestone 3"
+AURORA_VERSION="0.5.0-dev"
+AURORA_MILESTONE="Milestone 4"
 
 cat > /etc/aurora-release <<CONF
 AURORA OS ${AURORA_VERSION} (${AURORA_MILESTONE})
@@ -18,7 +18,7 @@ CONF
 
 cat > /etc/lsb-release <<CONF
 DISTRIB_ID=AURORA
-DISTRIB_RELEASE=0.4
+DISTRIB_RELEASE=0.5
 DISTRIB_CODENAME=aurora
 DISTRIB_DESCRIPTION="AURORA OS ${AURORA_VERSION} — MADE BY AARUTO"
 CONF
@@ -35,7 +35,7 @@ CONF
 cat > /usr/lib/os-release <<CONF
 PRETTY_NAME="AURORA OS ${AURORA_VERSION}"
 NAME="AURORA OS"
-VERSION_ID="0.4"
+VERSION_ID="0.5"
 VERSION="${AURORA_VERSION} (${AURORA_MILESTONE})"
 VERSION_CODENAME=aurora
 ID=aurora

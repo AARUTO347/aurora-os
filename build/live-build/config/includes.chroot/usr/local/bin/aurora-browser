@@ -8,5 +8,5 @@ export HOME="${HOME:-/home/ubuntu}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 export QT_QPA_PLATFORM=xcb
 export QTWEBENGINE_DISABLE_SANDBOX=1
-export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu --disable-gpu-compositing --disable-dev-shm-usage --single-process"
+export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu --disable-gpu-compositing --disable-dev-shm-usage --single-process --enable-unsafe-swiftshader --use-angle=swiftshader --use-gl=angle"
 exec falkon "$@"
