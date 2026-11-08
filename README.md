@@ -17,6 +17,8 @@
 
 [Features](#-features) • [Download](#-download) • [Installation](#-installation) • [Documentation](#-documentation) • [Building](#-building)
 
+**Website:** https://aaruto347.github.io/aurora-os/
+
 </div>
 
 ---
