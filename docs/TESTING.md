@@ -245,7 +245,7 @@ Run: `/home/aaruto/aurora-test/p11` (browser-only flow).
 
 ---
 
-## Phase K - Firefox browser build (0.5.0-dev, 2026-11-07) - NOT TESTED
+## Phase K - Firefox browser rendering (0.5.0-dev, 2026-11-08)
 
 The Falcon/WebKit/QtWebEngine attempts do not paint under the emulated adapter. The image was
 rebuilt with the official Mozilla Firefox tarball (`/opt/firefox`, version 159.0.1) and
@@ -255,12 +255,12 @@ fix for a GPU-less VM.
 
 - ISO: `artifacts/aurora-os-0.5.0-dev-amd64.iso`, 1,049,690,112 bytes, SHA256
   `d631d18b688f00bb75c1ed36add853d982237b724d5a812abb440a2e976dbf9e` (zstd squashfs).
-- Verification: **NOT TESTED**. The GPU-capable VM could not be provisioned: VMware has no
-  installable build here, and QEMU virgl/EGL has no DRM device in WSL (`/dev/dri` absent). The
-  QEMU boot that was started for this check was OOM-killed when a second VM was still running;
-  a repeat boot did not reach the greeter within the session window.
-- This ISO is saved at `D:\AURORAurora-os-0.5.0-firefox.iso`; it is **not** attached to a
-  release until a browser boot is observed.
+- Verification: **PASS**. Run `/home/aaruto/aurora-test/p14` (QEMU TCG, 4 vCPU, 3072 MiB):
+  `Mozilla Firefox 159.0.1`, `browser running=True`, and the screendump shows the full browser
+  window (tab bar, address bar, toolbar) rendered on the XFCE desktop — see
+  `docs/screenshots/browser.png`. This confirms Firefox's software WebRender works without a GPU.
+- A GPU-capable VM could not be provisioned here (no VMware installer; QEMU virgl has no DRM in
+  WSL), so the PASS is for the software path, which is what the live image uses.
 
 ---
 

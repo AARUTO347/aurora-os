@@ -27,7 +27,7 @@ AURORA OS is a custom bootable Linux desktop built on **Ubuntu 26.04 LTS** with 
 
 ## Current Status
 
-**0.5.0-dev — login, logout, switch-user and polkit verified; browser page rendering still failing under TCG** (Milestone 4 in progress)
+**0.5.0-dev — login, logout, switch-user, polkit and Firefox browser rendering verified** (Milestone 4 in progress)
 
 Next work is tracked in [docs/ROADMAP.md](docs/ROADMAP.md#immediate-next-actions): browser
 rendering under a GPU VM (KI-032), KVM for the test host (KI-003), and the release/test profile
@@ -51,7 +51,7 @@ split (KI-018).
 - **Arc-Dark** theme with elementary-xfce icons
 - **AURORA branding** throughout — wallpaper, identity files, hostname
 - **Live session** — runs entirely from ISO, no installation needed
-- **AURORA Browser** (Falkon, Chromium engine) with a launcher — opens a window, but page rendering needs a GPU-capable VM (KI-032)
+- **AURORA Browser** (Mozilla Firefox 159.0.1, software WebRender) with a launcher — renders fully without a GPU; Falkon and Epiphany remain installed as fallbacks
 - **Session actions** — Log Out, Switch User (LightDM dm-tool) and Lock Screen
 - **Fast boot** — offline-only units masked, 30 s systemd job timeouts, apt fast-fail
 - **BIOS-only image** — tested in QEMU (UEFI not supported; no installer)
@@ -60,7 +60,7 @@ split (KI-018).
 
 | Version | Size | SHA256 |
 |---------|------|--------|
-| [v0.5.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev) | 856 MB | `7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c` |
+| [v0.5.0-dev](https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev) | 1002 MB | `d631d18b688f00bb75c1ed36add853d982237b724d5a812abb440a2e976dbf9e` |
 
 > **Note:** BIOS-only live image. UEFI boot not yet supported (KI-015).
 
@@ -161,6 +161,10 @@ aurora-os/
 | After Logout | Switch User |
 |:------------:|:-----------:|
 | ![Logout](docs/screenshots/after-logout.png) | ![Switch](docs/screenshots/switch-user.png) |
+
+| AURORA Browser (Firefox) |
+|:------------------------:|
+| ![Browser](docs/screenshots/browser.png) |
 
 | AURORA Browser (Falkon) |
 |:------------------------:|

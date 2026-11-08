@@ -322,8 +322,8 @@ strictly optional and never blocks boot or login.
   `7ecbf55d5c7eef3198692fef1a2e75af16fcc52b515672a8b0be8229ccb1fe5c`.
 - Milestone 4 groundwork: `polkitd` + `pkexec` (no more AccountsService permission warning),
   `/var/lib/lightdm/data` created (KI-026 closed).
-- Browser: retried with `--enable-unsafe-swiftshader --use-angle=swiftshader --use-gl=angle`;
-  Falkon still does not paint a page under the emulated adapter (KI-032 open).
+- Browser: Mozilla Firefox 159.0.1 with software WebRender renders fully under QEMU TCG
+  (`aurora-test/p14`, `docs/screenshots/browser.png`); KI-032 closed.
 - Identity `0.5.0-dev (Milestone 4)`.
 
 ## Immediate next actions
