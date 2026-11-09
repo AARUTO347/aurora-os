@@ -7,16 +7,40 @@ fail=0
 list=$(mktemp)
 trap 'rm -f "$list"' EXIT
 
-echo "== POSIX shell syntax =="
+echo "== script syntax (shell and python) =="
 find "$ROOT/build" "$ROOT/scripts" -type f \
 	\( -name '*.sh' -o -name '*.chroot' -o -name 'aurora-*' \) > "$list"
 while IFS= read -r f; do
-	if sh -n "$f"; then
-		printf 'ok   %s\n' "${f#"$ROOT"/}"
-	else
-		printf 'FAIL %s\n' "${f#"$ROOT"/}"
-		fail=1
-	fi
+	first=$(head -n 1 "$f")
+	case "$first" in
+		'#!'*python*)
+			# Python files need a Python syntax check, not sh -n.
+			if command -v python3 >/dev/null 2>&1; then
+				if python3 -c 'import ast, sys
+with open(sys.argv[1], encoding="utf-8") as h:
+    ast.parse(h.read(), sys.argv[1])' "$f"; then
+					printf 'ok   %s (python syntax)\n' "${f#"$ROOT"/}"
+				else
+					printf 'FAIL %s (python syntax)\n' "${f#"$ROOT"/}"
+					fail=1
+				fi
+			else
+				printf 'skip %s (python3 not installed)\n' "${f#"$ROOT"/}"
+			fi
+			;;
+		'#!'*sh*|'#!'*bash*|'#!'*dash*)
+			if sh -n "$f"; then
+				printf 'ok   %s\n' "${f#"$ROOT"/}"
+			else
+				printf 'FAIL %s\n' "${f#"$ROOT"/}"
+				fail=1
+			fi
+			;;
+		*)
+			# Not a script (assets, .desktop, .service, .svg, ...): skip.
+			printf 'skip %s (not a script)\n' "${f#"$ROOT"/}"
+			;;
+	esac
 done < "$list"
 
 echo "== desktop entries =="
