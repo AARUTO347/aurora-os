@@ -9,11 +9,39 @@ All notable changes to AURORA OS are recorded here. Versions follow
 
 - New AURORA OS logo artwork (`distribution/branding/logo.png`, installed as
   `/usr/share/aurora/login-logo.png` and referenced by the greeter).
+- `scripts/release-gate.sh`: fail-closed production authentication gate. Inspects
+  both the squashfs and the initramfs and refuses to certify an image carrying
+  shared live credentials, empty-password auth (LightDM `allow-empty-passwords` /
+  PAM `nullok`), passwordless sudo/PolicyKit, test-only root serial
+  autologin/evidence, or casper live-session injection. Any inspection error is
+  FAIL, never "absent" (exit 0 PASS / 1 FAIL / 2 FAIL).
+- `tests/test-auth-gate.sh`: regression fixtures (clean / unsafe / missing rootfs /
+  clean rootfs without initrd), run by `make check` and `make test-gate`; no root
+  or build required.
+- `make release` (gated release-profile build) and `make test-gate` targets.
 
 ### Changed
 
 - Falkon removed from the package list (broken post-install against Qt 6);
   Firefox remains the browser. Release kernel pin moved to `7.0.0-14-generic`.
+- `scripts/build-release-iso.sh` now uses fresh work state, stages a release
+  profile (test hooks AND the shared-password service removed), and runs the gate
+  BEFORE copying the artifact to the publish directory; publication is blocked on
+  any non-zero gate exit.
+- `0400-gui.chroot` only enables/validates the shared-password service when it is
+  actually staged, so the release profile never provisions a common password.
+  Test-profile behaviour is unchanged.
+
+### Security
+
+- Finding 5 (public test credentials): production release is BLOCKED and gated.
+  The root `SECURITY.md` claim that the shared `ubuntu:aurora` password "is not a
+  vulnerability" is withdrawn. README credentials are now labelled test-profile
+  only. The gate refuses every existing image (verified 2026-11-09 against
+  `aurora-release-final.iso`, exit 1: shared-password service, empty-password auth
+  and casper initramfs injection); regression fixtures pass 4/4. Secure first-boot
+  onboarding must replace casper live provisioning before a production image can
+  pass (KI-035). No production image has been built or boot-tested.
 
 ## [0.5.0-dev] — 2026-11-06
 

@@ -1,6 +1,12 @@
 #!/bin/sh
-# Build a release-profile ISO: no test-only root serial autologin and no
-# evidence service (KI-018). The test profile remains build-iso.sh.
+# Build a release-profile ISO and refuse to publish it unless the fail-closed
+# production authentication gate (scripts/release-gate.sh) passes. The test
+# profile remains scripts/build-iso.sh and is never gated.
+#
+# Production is currently BLOCKED: KI-034 (a clean lb build does not complete
+# on this host) and KI-035 (casper live provisioning + shared credentials must
+# be replaced by secure first-boot onboarding). This script will not emit a
+# publishable artifact until the build completes AND the gate passes.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
@@ -14,12 +20,22 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
-mkdir -p "$WORK" "$ARTIFACTS"
+# Reset only our own known build path; never reuse a prior (possibly test) chroot.
+case "$WORK" in
+	"$BUILD_DIR"/work-release) ;;
+	*) echo "build-release-iso.sh: refusing unsafe work directory: $WORK" >&2; exit 1 ;;
+esac
+mkdir -p "$ARTIFACTS"
+rm -rf "$WORK"
+mkdir -p "$WORK"
 cp -a "$ROOT/build/live-build/." "$WORK/"
 
-# Test-only pieces, removed from the release profile.
+# Release profile: strip test-only hooks AND shared-credential provisioning.
+# Removing the service file also makes 0400-gui.chroot skip enabling it.
 rm -f "$WORK/config/hooks/0100-serial-autologin.chroot" \
       "$WORK/config/hooks/0300-evidence-service.chroot"
+rm -f "$WORK/config/includes.chroot/usr/local/bin/aurora-live-password" \
+      "$WORK/config/includes.chroot/etc/systemd/system/aurora-live-password.service"
 
 cd "$WORK"
 AURORA_VERSION=$VERSION lb config
@@ -31,6 +47,14 @@ if [ -z "$iso" ]; then
 	exit 1
 fi
 
+# Fail-closed gate BEFORE the artifact reaches the publish directory. Any
+# non-zero exit (unsafe element OR inspection error) blocks publication.
+if ! "$ROOT/scripts/release-gate.sh" --iso "$iso"; then
+	echo "build-release-iso.sh: RELEASE GATE FAILED; artifact NOT published." >&2
+	echo "build-release-iso.sh: inspect $iso (left in the work directory)." >&2
+	exit 1
+fi
+
 out=$ARTIFACTS/aurora-os-$VERSION-amd64.iso
 cp "$iso" "$out"
 (
@@ -38,25 +62,6 @@ cp "$iso" "$out"
 	sha256sum "$(basename "$out")" > "$(basename "$out").sha256"
 )
 
-# Release gate: the serial autologin must not exist in the image.
-mkdir -p /tmp/aurora-release-check
-mount -o loop,ro "$out" /tmp/aurora-release-check
-if unsquashfs -l /tmp/aurora-release-check/casper/filesystem.squashfs \
-	etc/systemd/system/aurora-serial-getty.service 2>/dev/null |
-	grep -q aurora-serial-getty; then
-	echo "build-release-iso.sh: FAIL - serial autologin present" >&2
-	umount /tmp/aurora-release-check
-	exit 1
-fi
-if unsquashfs -l /tmp/aurora-release-check/casper/filesystem.squashfs \
-	etc/profile.d/aurora-evidence.sh 2>/dev/null |
-	grep -q aurora-evidence; then
-	echo "build-release-iso.sh: FAIL - evidence hook present" >&2
-	umount /tmp/aurora-release-check
-	exit 1
-fi
-umount /tmp/aurora-release-check
-
 echo "RELEASE ISO: $out"
 echo "SHA256:      $(cut -d' ' -f1 "$out.sha256")"
-echo "Serial autologin: absent (KI-018 cleared)"
+echo "Production authentication gate: PASS"

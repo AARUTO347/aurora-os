@@ -8,7 +8,7 @@ list=$(mktemp)
 trap 'rm -f "$list"' EXIT
 
 echo "== script syntax (shell and python) =="
-find "$ROOT/build" "$ROOT/scripts" -type f \
+find "$ROOT/build" "$ROOT/scripts" "$ROOT/tests" -type f \
 	\( -name '*.sh' -o -name '*.chroot' -o -name 'aurora-*' \) > "$list"
 while IFS= read -r f; do
 	first=$(head -n 1 "$f")
@@ -62,7 +62,9 @@ for f in \
 	build/live-build/config/package-lists/aurora.list.chroot \
 	build/live-build/config/includes.chroot/etc/lightdm/lightdm.conf.d/50-aurora.conf \
 	build/live-build/config/includes.chroot/usr/share/aurora/login-logo.svg \
-	build/live-build/config/includes.chroot/usr/share/aurora/credits.txt; do
+	build/live-build/config/includes.chroot/usr/share/aurora/credits.txt \
+	scripts/release-gate.sh \
+	tests/test-auth-gate.sh; do
 	if [ -e "$ROOT/$f" ]; then
 		printf 'ok   %s\n' "$f"
 	else
@@ -70,6 +72,18 @@ for f in \
 		fail=1
 	fi
 done
+
+echo "== production auth gate regression =="
+if [ -f "$ROOT/tests/test-auth-gate.sh" ]; then
+	if sh "$ROOT/tests/test-auth-gate.sh"; then
+		printf 'ok   release-gate regression\n'
+	else
+		printf 'FAIL release-gate regression\n'
+		fail=1
+	fi
+else
+	printf 'skip tests/test-auth-gate.sh not present\n'
+fi
 
 if [ "$fail" -eq 0 ]; then
 	echo "RESULT: PASS"

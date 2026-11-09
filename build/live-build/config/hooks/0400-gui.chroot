@@ -6,7 +6,13 @@ set -eu
 # casper injects into lightdm.conf at boot.
 systemctl set-default graphical.target
 systemctl enable lightdm.service
-systemctl enable aurora-live-password.service
+# Shared live-session credentials are a TEST-profile convenience only. The
+# release profile (build-release-iso.sh) removes this service file, so only
+# enable it when it is actually staged. Production must not provision a common
+# password; scripts/release-gate.sh refuses any image that still carries it.
+if [ -e /etc/systemd/system/aurora-live-password.service ]; then
+	systemctl enable aurora-live-password.service
+fi
 systemctl enable aurora-identity.service
 systemctl enable aurora-vt.service
 
@@ -21,14 +27,12 @@ for f in \
 	/usr/share/aurora/credits.txt \
 	/usr/local/bin/aurora-display-setup \
 	/usr/local/bin/aurora-session-setup \
-	/usr/local/bin/aurora-live-password \
 	/usr/local/bin/aurora-identity \
 	/usr/local/bin/aurora-vt \
 	/usr/local/bin/aurora-session-action \
 	/usr/local/bin/aurora-system-info \
 	/usr/local/bin/aurora-diagnostics \
 	/usr/local/bin/aurora-wallpaper \
-	/etc/systemd/system/aurora-live-password.service \
 	/etc/systemd/system/aurora-identity.service \
 	/etc/systemd/system/aurora-vt.service \
 	/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml \
@@ -51,7 +55,6 @@ done
 
 chmod 0755 /usr/local/bin/aurora-display-setup \
 	/usr/local/bin/aurora-session-setup \
-	/usr/local/bin/aurora-live-password \
 	/usr/local/bin/aurora-identity \
 	/usr/local/bin/aurora-vt \
 	/usr/local/bin/aurora-session-action \
@@ -61,10 +64,23 @@ chmod 0755 /usr/local/bin/aurora-display-setup \
 chmod 0755 /etc/skel/Desktop/*.desktop
 chmod 0644 /usr/share/applications/aurora-*.desktop
 chmod 0644 /etc/xdg/autostart/aurora-session.desktop \
-	/etc/systemd/system/aurora-live-password.service \
 	/etc/systemd/system/aurora-identity.service \
 	/etc/systemd/system/aurora-vt.service \
 	/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml
+
+# Test-profile shared-credential helpers: validate and chmod only when staged.
+if [ -e /etc/systemd/system/aurora-live-password.service ]; then
+	for f in \
+		/usr/local/bin/aurora-live-password \
+		/etc/systemd/system/aurora-live-password.service; do
+		if [ ! -e "$f" ]; then
+			echo "0400-gui.chroot: missing $f" >&2
+			exit 1
+		fi
+	done
+	chmod 0755 /usr/local/bin/aurora-live-password
+	chmod 0644 /etc/systemd/system/aurora-live-password.service
+fi
 
 # The greeter is only usable if it can read the account list.
 systemctl enable accounts-daemon.service

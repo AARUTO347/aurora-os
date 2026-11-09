@@ -9,20 +9,28 @@ BUILD_DIR ?= $(HOME)/aurora-build
 ARTIFACTS := $(BUILD_DIR)/artifacts
 ISO := $(ARTIFACTS)/aurora-os-$(VERSION)-amd64.iso
 
-.PHONY: help check iso verify boot clean
+.PHONY: help check test-gate iso release verify boot clean
 
 help:
-	@echo "make check    static checks (no root, no build)"
-	@echo "make iso      build artifacts/aurora-os-$(VERSION)-amd64.iso"
-	@echo "make verify   inspect the built ISO without booting it"
-	@echo "make boot     boot the built ISO in QEMU (TCG, loopback VNC)"
-	@echo "make clean    remove live-build work state via 'lb clean --purge'"
+	@echo "make check     static checks + auth-gate regression (no root, no build)"
+	@echo "make test-gate run the production auth-gate regression tests only"
+	@echo "make iso       build the TEST-profile ISO (scripts/build-iso.sh)"
+	@echo "make release   build the release-profile ISO; gated before publish (root)"
+	@echo "make verify    inspect the built ISO without booting it"
+	@echo "make boot      boot the built ISO in QEMU (TCG, loopback VNC)"
+	@echo "make clean     remove live-build work state via 'lb clean --purge'"
 
 check:
 	scripts/check.sh
 
+test-gate:
+	tests/test-auth-gate.sh
+
 iso:
 	scripts/build-iso.sh
+
+release:
+	scripts/build-release-iso.sh
 
 verify: $(ISO)
 	scripts/verify-iso.sh $(ISO)
