@@ -1,8 +1,10 @@
 # AURORA OS - Roadmap
 
-Status: Milestone 1 complete on 2026-10-31. Milestone 2 is in progress: the 0.2.0-dev image boots
-to a branded XFCE desktop through LightDM (verified 2026-11-05). Remaining M2 work is the
-test/release profile split, Plymouth, the complete brand asset set, and greeter capture.
+Status: Milestones 0-2 complete (base boot, AURORA identity and branded GUI login verified).
+Milestones 3-4 in progress (desktop refinement and system utilities; AURORA apps verified in
+0.5.0-dev). Milestone 5 (release candidate) is BLOCKED: the fail-closed production auth gate is
+in place but no production image has been built or boot-tested (KI-034, KI-035). Milestone 7 not
+started; Milestone 8 in progress. See the per-milestone sections below for verified evidence.
 
 Every milestone is complete only when its acceptance criteria have been verified by executed tests
 and recorded evidence. The labels are: PASS, FAIL, BLOCKED, NOT TESTED, IN PROGRESS.
@@ -331,14 +333,15 @@ strictly optional and never blocks boot or login.
 ## Plan for Milestones 5-8
 
 Guiding constraints: one 3 GB QEMU at a time (concurrent VMs caused OOM kills), TCG boot to the
-greeter costs 25-40 minutes, KVM is still blocked for `aaruto` (KI-003), and every claim needs a
-screenshot or transcript. Estimates are working sessions, not promises.
+greeter costs 25-40 minutes, KVM is enabled for `aaruto` since 2026-11-08 (KI-003 resolved; about
+90 s to the greeter), and every claim needs a screenshot or transcript. Estimates are working
+sessions, not promises.
 
 ### M5 - Release candidate (next milestone)
 
 | Step | Work | Acceptance | Est. |
 |---|---|---|---|
-| 5.1 | Run `scripts/build-release-iso.sh` (release profile, no serial/evidence hooks) | build exits 0, gate reports both markers absent | 1 session |
+| 5.1 | Run `scripts/build-release-iso.sh` (release profile; test hooks and shared-password service stripped) | build exits 0 AND `scripts/release-gate.sh` PASS (fail-closed: squashfs + initramfs clean of test credentials, empty-password auth, passwordless sudo/PolicyKit and casper injection). Currently BLOCKED: the gate refuses every existing image (KI-035) and a clean build does not complete (KI-034) | 1 session |
 | 5.2 | Add a release test mode to `qemu-login-test.py`: drive the greeter with monitor `sendkey` only, no serial shell; detect state by screendump pixels | release ISO boots to greeter, password login works, no serial shell exists | 1-2 sessions |
 | 5.3 | Version the artifact: `VERSION`, ISO name, `SHA256SUMS` file, release notes, recovery/known-limitations doc | files present; `sha256sum -c` passes | 0.5 session |
 | 5.4 | Clean rebuild twice with `scripts/build-iso.sh` after the lb-binary pipeline fix; record both logs | both images boot; structural comparison documented (no bit-identical claim) | 2 sessions |
@@ -396,6 +399,6 @@ Exit: every app reads the running system; the assistant is strictly optional and
 ## Dependencies and constraints
 
 - Host: HP 250 G8, i3-1005G1, 11.8 GiB RAM; WSL sees 5.7 GiB.
-- WSL: Ubuntu 26.04 LTS, QEMU 10.2.1, KVM device present, user group pending.
+- WSL: Ubuntu 26.04 LTS, QEMU 10.2.1, KVM device present; `aaruto` in the `kvm` group since 2026-11-08.
 - No changes to Windows disks, bootloader, or security settings at any milestone.
 - myOS stays frozen and separate.

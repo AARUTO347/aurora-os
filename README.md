@@ -50,9 +50,11 @@ split (KI-018), and secure production authentication onboarding (KI-035).
 | 1 | Bootable base ISO | PASS |
 | 2 | AURORA identity + GUI login | PASS |
 | 3 | Functional desktop | In Progress |
-| 4 | System utilities | Not Started |
-| 5 | Release candidate | Not Started |
-| 6 | Optional AI / kernel work | Not Started |
+| 4 | System utilities | In Progress |
+| 5 | Release candidate | Blocked |
+| 6 | Optional AI / kernel work | Deferred |
+| 7 | Installer / UEFI / USB / persistence | Not Started |
+| 8 | AURORA apps + optional AI | In Progress |
 
 ## Features
 
