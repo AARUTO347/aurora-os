@@ -136,10 +136,20 @@
 
         <div class="section">
             <h2>Quick Start</h2>
-            <h3 style="color:#e0e0e0;margin:20px 0 10px">Login Credentials</h3>
+            <h3 style="color:#e0e0e0;margin:20px 0 10px">Test-Profile Login (development image only)</h3>
+            <p style="color:#ffb4b4;background:#3a1f24;border:1px solid #7c3aed;border-radius:8px;padding:12px;margin:10px 0">
+                <strong>Warning — development/test image, not for production.</strong>
+                The published ISO is a disposable live-session test build using the public
+                account below plus Ubuntu casper live provisioning (empty-password auth,
+                passwordless sudo/PolicyKit). Do not boot it on physical hardware. A production
+                image is <strong>BLOCKED</strong> and gated by <code>scripts/release-gate.sh</code>,
+                which refuses to publish any image carrying these credentials or passwordless
+                access (KI-035). See
+                <a href="https://github.com/AARUTO347/aurora-os/blob/main/SECURITY.md">SECURITY.md</a>.
+            </p>
             <table class="creds-table">
                 <tr><td>User</td><td><code>ubuntu</code></td></tr>
-                <tr><td>Password</td><td><code>aurora</code></td></tr>
+                <tr><td>Password</td><td><code>aurora</code> (test profile only)</td></tr>
                 <tr><td>Session</td><td>XFCE</td></tr>
             </table>
             <h3 style="color:#e0e0e0;margin:20px 0 10px">Run in QEMU</h3>
