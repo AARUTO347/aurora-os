@@ -5,6 +5,18 @@ All notable changes to AURORA OS are recorded here. Versions follow
 
 ## [Unreleased]
 
+### Fixed
+
+- `scripts/check.sh` selected files for the shell syntax stage by name glob
+  (`*.sh`, `*.chroot`, `aurora-*`), so non-script assets (`.desktop`, `.service`,
+  `.svg`, `aurora.list.chroot`) and the Python 3 files failed `sh -n`; `make check`
+  printed RESULT: FAIL. Files are now routed by shebang: Python files get an AST
+  syntax check, shell files get `sh -n`, everything else is reported as skipped.
+- `aurora-vt` waited for a `^Xorg ` ps line, but LightDM execs Xorg by full path,
+  so the fallback never matched; the service looped 60 s and `graphical.target`
+  finished ~74 s late under KVM (`AURORA_VT_NOT_CONFIRMED`). The pattern now
+  matches the full-path invocation. Not boot-verified (rebuild needs root).
+
 ### Added
 
 - New AURORA OS logo artwork (`distribution/branding/logo.png`, installed as
