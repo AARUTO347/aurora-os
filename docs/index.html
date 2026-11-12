@@ -33,6 +33,7 @@
         .status-pass { color: #00c896; font-weight: 600; }
         .status-progress { color: #f0a030; font-weight: 600; }
         .status-pending { color: #808090; }
+        .status-blocked { color: #ff6b6b; font-weight: 600; }
         .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .screenshots img { width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .code-block { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.9em; margin: 15px 0; }
@@ -51,12 +52,12 @@
             <h1>AURORA OS</h1>
             <p class="tagline">A bootable Ubuntu 26.04 LTS live desktop with XFCE, branded LightDM login, and AURORA identity</p>
             <div class="badges">
-                <span class="badge">v0.3.0-dev</span>
+                <span class="badge">v0.5.0-dev</span>
                 <span class="badge">Ubuntu 26.04 LTS</span>
                 <span class="badge">XFCE 4.20</span>
                 <span class="badge">MIT License</span>
             </div>
-            <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev" class="btn btn-primary">Download ISO</a>
+            <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev" class="btn btn-primary">Download ISO</a>
             <a href="https://github.com/AARUTO347/aurora-os" class="btn btn-secondary">View on GitHub</a>
         </div>
     </div>
@@ -76,9 +77,11 @@
                 <tr><td>1</td><td>Bootable base ISO</td><td class="status-pass">PASS</td></tr>
                 <tr><td>2</td><td>AURORA identity + GUI login</td><td class="status-pass">PASS</td></tr>
                 <tr><td>3</td><td>Functional desktop</td><td class="status-progress">In Progress</td></tr>
-                <tr><td>4</td><td>System utilities</td><td class="status-pending">Not Started</td></tr>
-                <tr><td>5</td><td>Release candidate</td><td class="status-pending">Not Started</td></tr>
-                <tr><td>6</td><td>Optional AI / kernel work</td><td class="status-pending">Not Started</td></tr>
+                <tr><td>4</td><td>System utilities</td><td class="status-progress">In Progress</td></tr>
+                <tr><td>5</td><td>Release candidate</td><td class="status-blocked">Blocked</td></tr>
+                <tr><td>6</td><td>Optional AI / kernel work</td><td class="status-pending">Deferred</td></tr>
+                <tr><td>7</td><td>Installer / UEFI / USB / persistence</td><td class="status-pending">Not Started</td></tr>
+                <tr><td>8</td><td>AURORA apps + optional AI</td><td class="status-progress">In Progress</td></tr>
             </table>
         </div>
 
@@ -109,6 +112,14 @@
                     <h3>BIOS Compatible</h3>
                     <p>Works in QEMU, VMware, and on real hardware with BIOS firmware.</p>
                 </div>
+                <div class="feature-card">
+                    <h3>AURORA Browser</h3>
+                    <p>Mozilla Firefox 159.0.1 with software WebRender — renders fully without a GPU. Falkon and Epiphany remain as fallbacks.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>AURORA Apps</h3>
+                    <p>System Info, Diagnostics, Settings and Applications launchers that read real system data.</p>
+                </div>
             </div>
         </div>
 
@@ -130,6 +141,14 @@
                 <div>
                     <p style="text-align:center;margin-bottom:8px;color:#808090">Switch User</p>
                     <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/switch-user.png" alt="AURORA Switch User">
+                </div>
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">AURORA Browser (Firefox)</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/browser.png" alt="AURORA Browser">
+                </div>
+                <div>
+                    <p style="text-align:center;margin-bottom:8px;color:#808090">AURORA Diagnostics</p>
+                    <img src="https://raw.githubusercontent.com/AARUTO347/aurora-os/main/docs/screenshots/diagnostics.png" alt="AURORA Diagnostics">
                 </div>
             </div>
         </div>
@@ -154,16 +173,16 @@
             </table>
             <h3 style="color:#e0e0e0;margin:20px 0 10px">Run in QEMU</h3>
             <div class="code-block">qemu-system-x86_64 -machine q35 -accel tcg -m 2048 -smp 2 \
-  -cdrom aurora-os-0.3.0-dev-amd64.iso -boot d -vga std \
+  -cdrom aurora-os-0.5.0-dev-amd64.iso -boot d -vga std \
   -display gtk,zoom-to-fit=on -vnc 127.0.0.1:1</div>
         </div>
 
         <div class="section">
             <h2>Download</h2>
             <div class="feature-card" style="max-width:500px">
-                <h3>v0.3.0-dev</h3>
-                <p>693 MB | BIOS-only live image | SHA256: <code style="font-size:0.8em">ebc54345bbf131c0d63e8c84e2821ae17347f7b18479f68ea103c9aee135af90</code></p>
-                <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.3.0-dev" class="btn btn-primary" style="margin-top:15px">Download from GitHub</a>
+                <h3>v0.5.0-dev</h3>
+                <p>1002 MB | BIOS-only live image | SHA256: <code style="font-size:0.8em">29691f1d321bc4c6806f673004d7836a7e1a407e01a5a267a99fc7b17dc1e756</code></p>
+                <a href="https://github.com/AARUTO347/aurora-os/releases/tag/v0.5.0-dev" class="btn btn-primary" style="margin-top:15px">Download from GitHub</a>
             </div>
         </div>
     </div>
