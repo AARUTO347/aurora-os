@@ -347,7 +347,7 @@ Harness: `AURORA_ACCEL=kvm AURORA_MEM=2048 AURORA_SMP=2 python3 scripts/qemu-log
 | O-07 | Logout → greeter | PASS | ubuntu session gone; `04-after-logout.png` |
 | O-08 | Second login + switch user (`dm-tool`) | PASS | new greeter session detected; `05-login-again-desktop.png`, `06-after-switch.png` |
 | O-09 | Cleanup logout | PASS | `07-cleanup.png` |
-| O-10 | UEFI (OVMF_CODE_4M) boot of the BIOS-only ISO | FAIL (KI-015, reproduced) | TianoCore: `BdsDxe: failed to load Boot0002 "UEFI QEMU DVD-ROM QM00005 " ... Not Found`; `BdsDxe: No bootable option or device was found.` Serial + screendump: `/home/aaruto/aurora-test-20261109-uefi/ser.log`, `uefi.png` |
+| O-10 | UEFI (OVMF_CODE_4M) boot of the BIOS-only ISO | FAIL (KI-015, reproduced) | TianoCore: `BdsDxe: failed to load Boot0002 "UEFI QEMU DVD-ROM QM00005 " ... Not Found`; `BdsDxe: No bootable option or device was found.` Serial + screendump: `/home/aaruto/aurora-test-20261109-uefi/ser.log`, `uefi.ppm` |
 | O-11 | `aurora-vt.service` under KVM | FAIL → fixed in source 2026-11-09 | Xorg runs full-path; the `^Xorg ` sed anchor never matched; service looped 60 s, `graphical.target` ~74 s late, `AURORA_VT_NOT_CONFIRMED`. Pattern fixed; verified by regex + `sh -n` only — NOT boot-verified (rebuild needs root, blocked) |
 
 No production image exists; KI-035 release gate BLOCKS publication. `make check` prints RESULT: PASS
